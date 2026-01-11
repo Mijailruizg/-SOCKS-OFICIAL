@@ -9,8 +9,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src')
     }
   },
-  // Ensure correct asset paths when publishing to GitHub Pages under a repo path
-  base: '/-SOCKS-OFICIAL/',
+  // Base path: use VITE_BASE env var when set (for GitHub Pages), otherwise '/'
+  base: process.env.VITE_BASE || '/',
   server: {
     host: true,
     port: 3000
