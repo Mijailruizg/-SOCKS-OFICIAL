@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+.vscode/
+.DS_Store
+*.log
+.idea/
+public/galeria/*.psd
+coverage/
+.vite/
