@@ -9,6 +9,8 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src')
     }
   },
+  // Ensure correct asset paths when publishing to GitHub Pages under a repo path
+  base: '/-SOCKS-OFICIAL/',
   server: {
     host: true,
     port: 3000
