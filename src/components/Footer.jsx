@@ -30,7 +30,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-6">
           {/* Newsletter (left) */}
           <div className="lg:col-span-1">
-            <h3 className="text-2xl font-bold mb-3">JOIN THE SQUAD</h3>
+            <div className="flex justify-center mb-3">
+              <img src="/galeria/logo.png" alt="SOCKS OFICIAL" className="h-16 object-contain" />
+            </div>
             <p className="text-gray-300 mb-4">Stay up to date and get exclusive deals by signing up for our newsletter.</p>
             <form className="flex max-w-md">
               <input type="email" placeholder="Your Email" className="flex-1 px-4 py-3 rounded-l-lg bg-black/60 placeholder-gray-400 text-white border border-white/10 focus:outline-none" />
