@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { galleryImages } from '@/data/gallery';
 
 const ModelGallerySection = ({ title = 'Modelos' }) => {
@@ -13,15 +12,11 @@ const ModelGallerySection = ({ title = 'Modelos' }) => {
           </div>
         </div>
 
-        <div className="flex gap-4 overflow-x-auto py-4 snap-x snap-mandatory items-start">
+        <div className="flex gap-6 justify-center items-start py-6 flex-wrap">
           {galleryImages.map((src, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ scale: 1.02 }}
-              className="flex-none rounded-2xl overflow-hidden bg-gray-100 snap-center"
-            >
-              <img src={src} alt={`modelo-${i}`} className="h-[600px] w-auto object-contain block" />
-            </motion.div>
+            <div key={i} className="rounded-2xl overflow-hidden bg-gray-100 flex-shrink-0">
+              <img src={src} alt={`modelo-${i}`} className="max-h-[520px] w-auto object-contain block" />
+            </div>
           ))}
         </div>
       </div>
