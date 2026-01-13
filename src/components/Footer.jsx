@@ -31,7 +31,7 @@ const Footer = () => {
           {/* Newsletter (left) */}
           <div className="lg:col-span-1">
             <div className="flex justify-center mb-3">
-              <img src="/galeria/logo.png" alt="SOCKS OFICIAL" className="h-16 object-contain" />
+              <img src="/galeria/logo%20.png" alt="SOCKS OFICIAL" className="h-16 object-contain" />
             </div>
             <p className="text-gray-300 mb-4">Stay up to date and get exclusive deals by signing up for our newsletter.</p>
             <form className="flex max-w-md">
