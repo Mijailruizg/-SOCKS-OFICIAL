@@ -17,7 +17,7 @@ const HomePage = () => {
         <HeroSection />
 
         {/* Galería de modelos en lugar de New Arrivals */}
-        <ModelGallerySection title="Modelos" />
+        <ModelGallerySection />
 
         <ProductSection 
           title="Hybrid Collection" 

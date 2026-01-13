@@ -69,15 +69,6 @@ const HeroSection = () => {
                 SHOP NOW
               </Button>
             </Link>
-            <Link to="/brand">
-               <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto border-white text-white bg-transparent hover:bg-white hover:text-black font-bold px-8 py-6 rounded-full text-lg backdrop-blur-sm"
-              >
-                OUR STORY
-              </Button>
-            </Link>
           </motion.div>
         </div>
       </div>
