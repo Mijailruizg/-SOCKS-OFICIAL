@@ -10,10 +10,15 @@ const Footer = () => {
       style={{
         backgroundImage: "url('/galeria/fondo.jpeg')",
         backgroundSize: 'cover',
-        backgroundPosition: 'center center',
+        backgroundPosition: 'center top',
       }}
     >
-      <div className="absolute inset-0 bg-black/80"></div>
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.12), rgba(0,0,0,0.55))',
+        }}
+      ></div>
       <div className="relative max-w-7xl mx-auto px-6">
         {/* Logo centered */}
         <div className="flex justify-center mb-8">
