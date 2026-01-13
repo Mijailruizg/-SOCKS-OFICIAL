@@ -27,30 +27,16 @@ const Footer = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start mb-6">
           {/* Newsletter (left) */}
           <div className="lg:col-span-1">
-            <h3 className="text-2xl font-bold mb-3">Stay in the loop</h3>
+            <h3 className="text-2xl font-bold mb-3">JOIN THE SQUAD</h3>
             <p className="text-gray-300 mb-4">Stay up to date and get exclusive deals by signing up for our newsletter.</p>
             <form className="flex max-w-md">
               <input type="email" placeholder="Your Email" className="flex-1 px-4 py-3 rounded-l-lg bg-black/60 placeholder-gray-400 text-white border border-white/10 focus:outline-none" />
               <button type="submit" className="px-6 py-3 bg-white text-black font-semibold rounded-r-lg">Sign Up</button>
             </form>
-            <div className="mt-6 text-gray-300">Email Us<br/><a href="mailto:socks.oficial@gmail.com" className="underline">socks.oficial@gmail.com</a></div>
-            <div className="mt-4 flex items-center gap-3">
-              <a href="http://wa.me/+51974206791" target="_blank" rel="noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black">
-                <Phone className="w-5 h-5" />
-              </a>
-              <a href="https://www.facebook.com/share/18AMAJ7RGC/?mibextid=wwXIfr" target="_blank" rel="noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black">
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a href="https://www.instagram.com/socks.oficial?igsh=MXdsa3QyNTVpcTJnaw%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black">
-                <Instagram className="w-5 h-5" />
-              </a>
-              <button className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black" title="TikTok (próximamente)">
-                <span className="text-xs font-bold">TT</span>
-              </button>
-            </div>
+            <div className="mt-6 text-gray-300"><a href="mailto:socks.oficial@gmail.com" className="underline">socks.oficial@gmail.com</a></div>
           </div>
 
           {/* Empty center intentionally (keeps layout like example) */}
@@ -76,6 +62,25 @@ const Footer = () => {
                 <li><Link to="/" className="hover:underline">Military Discount</Link></li>
               </ul>
             </div>
+          </div>
+        </div>
+
+        {/* Centered contact row with icons (under JOIN THE SQUAD) */}
+        <div className="mt-6 mb-6 flex flex-col items-center gap-3">
+          <div className="text-gray-300">Contact: <a href="mailto:socks.oficial@gmail.com" className="underline">socks.oficial@gmail.com</a></div>
+          <div className="flex items-center gap-4">
+            <a href="http://wa.me/+51974206791" target="_blank" rel="noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black">
+              <Phone className="w-5 h-5" />
+            </a>
+            <a href="https://www.facebook.com/share/18AMAJ7RGC/?mibextid=wwXIfr" target="_blank" rel="noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black">
+              <Facebook className="w-5 h-5" />
+            </a>
+            <a href="https://www.instagram.com/socks.oficial?igsh=MXdsa3QyNTVpcTJnaw%3D%3D&utm_source=qr" target="_blank" rel="noreferrer" className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black">
+              <Instagram className="w-5 h-5" />
+            </a>
+            <button className="flex items-center justify-center w-10 h-10 rounded-full bg-white text-black" title="TikTok (próximamente)">
+              <span className="text-xs font-bold">TT</span>
+            </button>
           </div>
         </div>
 
