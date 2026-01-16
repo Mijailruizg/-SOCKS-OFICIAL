@@ -37,10 +37,10 @@ const Header = () => {
 
   const navLinks = [
     { name: 'HOME', path: '/' },
-    { name: 'PRODUCTOS', path: '/shop' },
-    { name: 'NOVEDADES', path: '/shop?category=new-arrivals' },
-    { name: 'NOSOTROS', path: '/about' },
-    { name: 'CONTACTO', path: '/contact' },
+    { name: 'SHOP', path: '/shop' },
+    { name: 'NEW ARRIVALS', path: '/shop?category=new-arrivals' },
+    { name: 'ABOUT', path: '/about' },
+    { name: 'CONTACT', path: '/contact' },
   ];
 
   return (
@@ -74,7 +74,7 @@ const Header = () => {
             <form onSubmit={handleSearch} className="hidden lg:block relative">
               <input
                type="text"
-               placeholder="Buscar..."
+               placeholder="Search..."
                value={searchQuery}
                onChange={(e) => setSearchQuery(e.target.value)}
                className="pl-3 pr-8 py-1 rounded-full border border-gray-700 bg-black text-white text-sm focus:outline-none focus:border-white w-40 transition-all focus:w-60 placeholder-gray-500"
@@ -91,23 +91,23 @@ const Header = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 bg-black border-gray-800 text-white">
-                  <DropdownMenuLabel>Mi cuenta</DropdownMenuLabel>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator className="bg-gray-800" />
                   <DropdownMenuItem onClick={() => navigate('/orders')} className="focus:bg-gray-800 focus:text-white">
-                    <Package className="mr-2 h-4 w-4" /> Pedidos
+                    <Package className="mr-2 h-4 w-4" /> Orders
                   </DropdownMenuItem>
                    <DropdownMenuItem className="focus:bg-gray-800 focus:text-white">
-                    <Heart className="mr-2 h-4 w-4" /> Favoritos
+                    <Heart className="mr-2 h-4 w-4" /> Favorites
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-gray-800" />
                   <DropdownMenuItem onClick={handleLogout} className="text-red-500 focus:bg-gray-800 focus:text-red-400">
-                    <LogOut className="mr-2 h-4 w-4" /> Cerrar sesión
+                    <LogOut className="mr-2 h-4 w-4" /> Sign Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <Link to="/login" className="hidden md:block">
-                <Button variant="ghost" className="font-medium text-white hover:bg-gray-800 hover:text-white">Iniciar sesión</Button>
+                <Button variant="ghost" className="font-medium text-white hover:bg-gray-800 hover:text-white">Sign In</Button>
               </Link>
             )}
 
@@ -142,7 +142,7 @@ const Header = () => {
               <form onSubmit={handleSearch} className="relative">
                 <input
                   type="text"
-                    placeholder="Buscar productos..."
+                    placeholder="Search products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-4 pr-10 py-3 rounded-xl border border-gray-700 bg-gray-900 text-white focus:outline-none focus:ring-1 focus:ring-white"
@@ -168,16 +168,16 @@ const Header = () => {
                    <div className="space-y-3">
                      <p className="font-medium text-gray-400">Signed in as {user.full_name || user.email}</p>
                     <Button variant="outline" className="w-full justify-start border-gray-700 text-white hover:bg-gray-800 hover:text-white" onClick={() => {navigate('/orders'); setMobileMenuOpen(false);}}>
-                       <Package className="mr-2 h-4 w-4" /> Pedidos
+                       <Package className="mr-2 h-4 w-4" /> Orders
                      </Button>
                      <Button variant="destructive" className="w-full justify-start" onClick={() => {handleLogout(); setMobileMenuOpen(false);}}>
-                       <LogOut className="mr-2 h-4 w-4" /> Cerrar sesión
+                       <LogOut className="mr-2 h-4 w-4" /> Sign Out
                      </Button>
                    </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-4">
                     <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-black">Iniciar sesión</Button>
+                      <Button variant="outline" className="w-full border-white text-white hover:bg-white hover:text-black">Sign In</Button>
                     </Link>
                     <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
                       <Button className="w-full bg-white text-black hover:bg-gray-200">Registrarse</Button>

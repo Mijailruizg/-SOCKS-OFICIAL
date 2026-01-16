@@ -75,8 +75,9 @@ export const CartProvider = ({ children }) => {
 
   const getCartTotal = () => {
     return cartItems.reduce((total, item) => {
-      const price = item.sale_price || item.price;
-      return total + (price * item.quantity);
+      const price = item.sale_price || item.price || 0;
+      const quantity = item.quantity || 1;
+      return total + (parseFloat(price) * quantity);
     }, 0);
   };
 

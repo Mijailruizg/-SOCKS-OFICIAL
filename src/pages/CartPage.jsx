@@ -28,11 +28,11 @@ const CartPage = () => {
   if (cartItems.length === 0) {
     return (
         <div className="min-h-[60vh] flex flex-col items-center justify-center p-4 text-center bg-white text-black">
-            <h1 className="text-3xl font-bold mb-4">Tu carrito está vacío</h1>
-            <p className="text-gray-500 mb-8">Parece que aún no has agregado productos.</p>
+            <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
+            <p className="text-gray-500 mb-8">Start shopping to add items to your cart.</p>
             <Link to="/shop">
                 <Button size="lg" className="bg-black hover:bg-gray-800 text-white">
-                    COMENZAR A COMPRAR
+                    START SHOPPING
                 </Button>
             </Link>
         </div>
@@ -42,11 +42,11 @@ const CartPage = () => {
   return (
     <>
       <Helmet>
-        <title>Carrito - SOCKS OFICIAL</title>
+        <title>Shopping Cart - SOCKS OFICIAL</title>
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-4 py-12 bg-white text-black">
-        <h1 className="text-3xl font-bold mb-8">Carrito de compras ({cartItems.length})</h1>
+        <h1 className="text-3xl font-bold mb-8">Shopping Cart ({cartItems.length})</h1>
 
         <div className="grid lg:grid-cols-3 gap-12">
           {/* Cart Items */}
@@ -62,6 +62,11 @@ const CartPage = () => {
                     <div>
                         <h3 className="font-bold text-black">{item.name}</h3>
                         <p className="text-sm text-gray-500 capitalize">{item.category}</p>
+                        {(item.size || item.color) && (
+                          <p className="text-xs text-gray-600 mt-1">
+                            {item.color && `Color: ${item.color}`} {item.size && `• Size: ${item.size}`}
+                          </p>
+                        )}
                     </div>
                     <button onClick={() => removeFromCart(item.id)} className="text-gray-400 hover:text-red-500">
                         <Trash2 className="w-5 h-5" />
@@ -94,7 +99,7 @@ const CartPage = () => {
           {/* Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 sticky top-24">
-                <h2 className="text-xl font-bold mb-6 text-black">Resumen del pedido</h2>
+                <h2 className="text-xl font-bold mb-6 text-black">Order Summary</h2>
                 
                 <div className="space-y-4 mb-6">
                     <div className="flex justify-between">
@@ -102,11 +107,11 @@ const CartPage = () => {
                         <span className="font-medium text-black">{formatPrice(subtotal)}</span>
                     </div>
                     <div className="flex justify-between">
-                        <span className="text-gray-600">Envío</span>
-                        <span className="font-medium text-black">{shipping === 0 ? 'Gratis' : formatPrice(shipping)}</span>
+                        <span className="text-gray-600">Shipping</span>
+                        <span className="font-medium text-black">{shipping === 0 ? 'Free' : formatPrice(shipping)}</span>
                     </div>
                     <div className="flex justify-between">
-                        <span className="text-gray-600">Impuesto</span>
+                        <span className="text-gray-600">Tax</span>
                         <span className="font-medium text-black">{formatPrice(tax)}</span>
                     </div>
                     <div className="border-t border-gray-200 pt-4 flex justify-between">
@@ -116,11 +121,11 @@ const CartPage = () => {
                 </div>
 
                 <Button onClick={handleCheckout} className="w-full h-12 text-lg bg-black hover:bg-gray-800 text-white">
-                    Pagar <ArrowRight className="ml-2 w-5 h-5" />
+                    Pay <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
                 
                 <p className="text-xs text-center text-gray-500 mt-4">
-                    Envío gratis en pedidos mayores a {formatPrice(50)}
+                    Free shipping on orders over {formatPrice(50)}
                 </p>
             </div>
           </div>

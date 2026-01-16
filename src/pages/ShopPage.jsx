@@ -7,118 +7,11 @@ import ProductCard from '@/components/ProductCard';
 import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-
-// Sample products (in production, fetch from Supabase)
-const allProducts = [
-  {
-    id: 1,
-    name: 'Elite Running Socks Pro',
-    description: 'Premium moisture-wicking running socks',
-    price: 29.99,
-    sale_price: 24.99,
-    category: 'running',
-    image_url: 'https://images.unsplash.com/photo-1587906443886-5f607ca9640c',
-    rating: 4.8,
-    stock: 45,
-    is_new: true,
-    reviews: 128
-  },
-  {
-    id: 2,
-    name: 'Marathon Compression Socks',
-    description: 'Advanced compression for endurance',
-    price: 34.99,
-    sale_price: null,
-    category: 'running',
-    image_url: 'https://images.unsplash.com/photo-1525494337628-3341b4e3bf01',
-    rating: 4.9,
-    stock: 32,
-    is_new: true,
-    reviews: 95
-  },
-  {
-    id: 5,
-    name: 'Hybrid Sport Socks',
-    description: 'Perfect for any activity',
-    price: 26.99,
-    sale_price: 21.99,
-    category: 'hybrid',
-    image_url: 'https://images.unsplash.com/photo-1661012004430-7ab4c7c4b926',
-    rating: 4.6,
-    stock: 52,
-    is_new: false,
-    reviews: 203
-  },
-  {
-    id: 9,
-    name: 'Merino Wool Winter Socks',
-    description: 'Ultra-warm merino blend',
-    price: 39.99,
-    sale_price: 32.99,
-    category: 'winter',
-    image_url: 'https://images.unsplash.com/photo-1671794621043-1916a8d7a261',
-    rating: 4.9,
-    stock: 25,
-    is_new: false,
-    reviews: 245
-  },
-  {
-    id: 13,
-    name: 'Pro Golf Performance Socks',
-    description: 'Tour-level comfort',
-    price: 32.99,
-    sale_price: 27.99,
-    category: 'golf',
-    image_url: 'https://images.unsplash.com/photo-1677174502880-39cadc0e4fdf',
-    rating: 4.8,
-    stock: 38,
-    is_new: false,
-    reviews: 156
-  },
-  {
-    id: 3,
-    name: 'Speed Performance Socks',
-    description: 'Lightweight and breathable',
-    price: 27.99,
-    sale_price: 22.99,
-    category: 'running',
-    image_url: 'https://images.unsplash.com/photo-1587906443886-5f607ca9640c',
-    rating: 4.7,
-    stock: 3,
-    is_new: true,
-    reviews: 156
-  },
-  {
-    id: 6,
-    name: 'All-Day Comfort Hybrid',
-    description: 'From gym to street',
-    price: 28.99,
-    sale_price: null,
-    category: 'hybrid',
-    image_url: 'https://images.unsplash.com/photo-1484071096222-7936a931e094',
-    rating: 4.7,
-    stock: 41,
-    is_new: false,
-    reviews: 174
-  },
-  {
-    id: 10,
-    name: 'Arctic Performance Socks',
-    description: 'Extreme cold weather protection',
-    price: 44.99,
-    sale_price: null,
-    category: 'winter',
-    image_url: 'https://images.unsplash.com/photo-1616181579861-f73387e6c702',
-    rating: 4.8,
-    stock: 18,
-    is_new: false,
-    reviews: 167
-  }
-];
+import { products as realProducts } from '@/data/products';
 
 const ShopPage = () => {
   const [searchParams] = useSearchParams();
-  const [products, setProducts] = useState(allProducts);
+  const [products, setProducts] = useState(realProducts);
   const [loading, setLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [priceRange, setPriceRange] = useState([0, 50]);
@@ -147,7 +40,7 @@ const ShopPage = () => {
 
   const filterProducts = () => {
     setLoading(true);
-    let filtered = [...allProducts];
+    let filtered = [...realProducts];
 
     // Category filter
     if (selectedCategory !== 'all') {
@@ -199,10 +92,10 @@ const ShopPage = () => {
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl md:text-5xl font-extrabold text-black mb-4">
-              Tienda - Todos los productos
+              Shop - All Products
             </h1>
             <p className="text-sm text-black/70">
-              Mostrando {products.length} producto{products.length !== 1 ? 's' : ''}
+              Showing {products.length} product{products.length !== 1 ? 's' : ''}
             </p>
           </div>
 
@@ -212,12 +105,12 @@ const ShopPage = () => {
               <div className="bg-white rounded-2xl p-6 border border-gray-200">
                 <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-black">
                   <Filter className="w-5 h-5 text-black" />
-                  Filtros
+                  Filters
                 </h3>
 
                 {/* Category Filter */}
                 <div className="mb-6">
-                  <h4 className="font-medium mb-3 text-black">Categoría</h4>
+                  <h4 className="font-medium mb-3 text-black">Category</h4>
                   <div className="space-y-2">
                     {categories.map((cat) => (
                       <label key={cat} className="flex items-center cursor-pointer">
@@ -236,7 +129,7 @@ const ShopPage = () => {
 
                 {/* Price Range */}
                 <div className="mb-6">
-                  <h4 className="font-medium mb-3 text-black">Rango de precios</h4>
+                  <h4 className="font-medium mb-3 text-black">Price Range</h4>
                   <Slider
                     min={0}
                     max={50}
@@ -253,16 +146,16 @@ const ShopPage = () => {
 
                 {/* Sort By */}
                 <div>
-                  <h4 className="font-medium mb-3 text-black">Ordenar por</h4>
+                  <h4 className="font-medium mb-3 text-black">Sort By</h4>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                     className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-black focus:outline-none"
                   >
-                    <option value="newest">Novedades</option>
-                    <option value="price-low">Precio: menor a mayor</option>
-                    <option value="price-high">Precio: mayor a menor</option>
-                    <option value="rating">Mejor valorados</option>
+                    <option value="newest">Newest</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Highest Rated</option>
                   </select>
                 </div>
               </div>
@@ -278,7 +171,7 @@ const ShopPage = () => {
                   className="w-full"
                 >
                   <SlidersHorizontal className="w-4 h-4 mr-2" />
-                  {showFilters ? 'Ocultar filtros' : 'Mostrar filtros'}
+                  {showFilters ? 'Hide Filters' : 'Show Filters'}
                 </Button>
               </div>
 

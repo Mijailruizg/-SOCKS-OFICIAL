@@ -5,6 +5,15 @@ import { products } from '@/data/products';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+// Generate UUID v4 compatible ID
+const generateId = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+
 export const api = {
   // Products
   getProducts: async () => {
@@ -51,7 +60,7 @@ export const api = {
     }
 
     const newUser = { 
-      id: crypto.randomUUID(), 
+      id: generateId(), 
       email, 
       password, // In real app, never store plain text
       full_name: fullName,
@@ -84,18 +93,42 @@ export const api = {
 
   // Orders
   createOrder: async (userId, orderData) => {
-    await delay(1500); // Simulate Stripe processing
-    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-    const newOrder = {
-      id: crypto.randomUUID(),
-      user_id: userId,
-      ...orderData,
-      created_at: new Date().toISOString(),
-      status: 'processing'
-    };
-    orders.push(newOrder);
-    localStorage.setItem('orders', JSON.stringify(orders));
-    return newOrder;
+    try {
+      await delay(800); // Simulate processing
+      
+      // Validate required data
+      if (!userId) {
+        throw new Error('User ID is required');
+      }
+      if (!orderData) {
+        throw new Error('Order data is required');
+      }
+      
+      const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+      const newOrder = {
+        id: generateId(),
+        user_id: userId,
+        total_amount: orderData.total_amount || 0,
+        subtotal: orderData.subtotal || 0,
+        shipping: orderData.shipping || 0,
+        tax: orderData.tax || 0,
+        items: orderData.items || [],
+        status: orderData.status || 'pending',
+        payment_method: orderData.payment_method || 'whatsapp',
+        shipping_address: orderData.shipping_address || {},
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      
+      orders.push(newOrder);
+      localStorage.setItem('orders', JSON.stringify(orders));
+      
+      console.log('Order created:', newOrder);
+      return newOrder;
+    } catch (error) {
+      console.error('Error creating order:', error);
+      throw error;
+    }
   },
 
   getOrders: async (userId) => {

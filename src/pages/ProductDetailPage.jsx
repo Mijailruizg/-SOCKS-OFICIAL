@@ -8,68 +8,75 @@ import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/components/ui/use-toast';
 import ProductCard from '@/components/ProductCard';
 import { formatPrice } from '@/lib/utils';
+import { products } from '@/data/products';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState('M');
+  const [selectedColor, setSelectedColor] = useState('White');
   const { addToCart } = useCart();
   const { toast } = useToast();
 
-  // Sample product data (in production, fetch from Supabase)
+  // Load product from products data
   useEffect(() => {
-    const sampleProduct = {
-      id: parseInt(id),
-      name: 'Elite Running Socks Pro',
-      description: 'Experience ultimate performance with our Elite Running Socks Pro. Engineered with advanced moisture-wicking technology and strategic cushioning, these socks provide unmatched comfort for long-distance runs.',
-      price: 29.99,
-      sale_price: 24.99,
-      category: 'running',
-      image_url: 'https://images.unsplash.com/photo-1587906443886-5f607ca9640c',
-      rating: 4.8,
-      stock: 45,
-      is_new: true,
-      reviews: 128,
-      features: [
-        'Moisture-wicking fabric',
-        'Arch support',
-        'Reinforced heel and toe',
-        'Breathable mesh panels',
-        'Anti-blister technology'
-      ]
-    };
-    setProduct(sampleProduct);
+    const foundProduct = products.find(p => p.id === id);
+    if (foundProduct) {
+      setProduct(foundProduct);
+      if (foundProduct.sizes && foundProduct.sizes.length > 0) {
+        setSelectedSize(foundProduct.sizes[0]);
+      }
+      if (foundProduct.colors && foundProduct.colors.length > 0) {
+        setSelectedColor(foundProduct.colors[0]);
+      }
+    }
+    // Scroll to top when product changes
+    window.scrollTo(0, 0);
   }, [id]);
 
   const relatedProducts = [
     {
-      id: 2,
-      name: 'Marathon Compression Socks',
-      price: 34.99,
+      id: 6,
+      name: 'SOCKS OFICIAL 1',
+      price: 30.00,
       sale_price: null,
-      category: 'running',
-      image_url: 'https://images.unsplash.com/photo-1525494337628-3341b4e3bf01',
-      rating: 4.9,
-      stock: 32,
-      reviews: 95
+      category: 'hybrid',
+      image_url: '/galeria/producto 1/1.jpeg',
+      rating: 4.8,
+      stock: 45,
+      reviews: 256,
+      sizes: ['S', 'M', 'L', 'XL']
     },
     {
-      id: 3,
-      name: 'Speed Performance Socks',
-      price: 27.99,
-      sale_price: 22.99,
-      category: 'running',
-      image_url: 'https://images.unsplash.com/photo-1587906443886-5f607ca9640c',
+      id: 7,
+      name: 'SOCKS OFICIAL 2',
+      price: 30.00,
+      sale_price: null,
+      category: 'hybrid',
+      image_url: '/galeria/producto 1/2.jpeg',
       rating: 4.7,
-      stock: 3,
-      reviews: 156
+      stock: 38,
+      reviews: 198,
+      sizes: ['S', 'M', 'L', 'XL']
+    },
+    {
+      id: 8,
+      name: 'SOCKS OFICIAL 3',
+      price: 30.00,
+      sale_price: null,
+      category: 'hybrid',
+      image_url: '/galeria/producto 1/3.jpeg',
+      rating: 4.6,
+      stock: 42,
+      reviews: 142,
+      sizes: ['S', 'M', 'L', 'XL']
     }
   ];
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart(product, quantity);
+      addToCart({ ...product, size: selectedSize, color: selectedColor }, quantity);
     }
   };
 
@@ -98,6 +105,10 @@ const ProductDetailPage = () => {
     ? Math.round(((product.price - product.sale_price) / product.price) * 100)
     : 0;
 
+  if (!product) {
+    return <div className="p-12 text-center">Loading product...</div>;
+  }
+
   return (
     <>
       <Helmet>
@@ -109,9 +120,9 @@ const ProductDetailPage = () => {
         <div className="max-w-7xl mx-auto">
           {/* Breadcrumb */}
           <nav className="mb-8 text-sm text-gray-600">
-            <Link to="/" className="hover:text-purple-600">Inicio</Link>
+            <Link to="/" className="hover:text-purple-600">Home</Link>
             <span className="mx-2">/</span>
-            <Link to="/shop" className="hover:text-purple-600">Tienda</Link>
+            <Link to="/shop" className="hover:text-purple-600">Shop</Link>
             <span className="mx-2">/</span>
             <span className="text-gray-900">{product.name}</span>
           </nav>
@@ -145,7 +156,7 @@ const ProductDetailPage = () => {
             >
               {product.is_new && (
                 <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-bold px-4 py-1 rounded-full mb-4">
-                  NUEVO
+                  NEW
                 </span>
               )}
 
@@ -187,6 +198,26 @@ const ProductDetailPage = () => {
               <p className="text-gray-700 mb-8 leading-relaxed">
                 {product.description}
               </p>
+
+              {/* Color Selector */}
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-900 mb-3">Color</h3>
+                <div className="flex gap-3">
+                  {['White', 'Black'].map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => setSelectedColor(color)}
+                      className={`px-6 py-2 rounded-xl font-medium transition-all ${
+                        selectedColor === color
+                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                          : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-600'
+                      }`}
+                    >
+                      {color}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               {/* Size Selector */}
               <div className="mb-6">
@@ -238,7 +269,7 @@ const ProductDetailPage = () => {
                   className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-6 rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 transition-all"
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />
-                  Añadir al carrito
+                  Add to Cart
                 </Button>
                 <Button
                   onClick={handleWishlist}
@@ -274,7 +305,7 @@ const ProductDetailPage = () => {
           {/* Related Products */}
           <div>
             <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              También te puede interesar
+              You May Also Like
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {relatedProducts.map((relatedProduct) => (

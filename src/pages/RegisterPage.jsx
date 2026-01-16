@@ -12,25 +12,47 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
+    // Validate form
+    if (!name || !email || !password || !confirmPassword) {
+      setError('All fields are required');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
 
     if (password !== confirmPassword) {
+      setError('Passwords do not match');
       return;
     }
 
     setLoading(true);
 
-    const { error } = await signUp(email, password, name);
+    try {
+      const { error: signUpError } = await signUp(email, password, name);
 
-    if (!error) {
+      if (signUpError) {
+        setError(signUpError.message || 'Failed to create account');
+        setLoading(false);
+        return;
+      }
+
       navigate('/login');
+    } catch (err) {
+      console.error('Registration error:', err);
+      setError(err.message || 'An error occurred during registration');
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -56,6 +78,12 @@ const RegisterPage = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+                  {error}
+                </div>
+              )}
+              
               <div>
                 <label className="block text-sm font-medium text-black mb-2">
                   Full Name

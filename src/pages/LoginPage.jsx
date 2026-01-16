@@ -10,20 +10,36 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setError('');
 
-    const { error } = await signIn(email, password);
-
-    if (!error) {
-      navigate('/');
+    if (!email || !password) {
+      setError('Email and password are required');
+      return;
     }
 
-    setLoading(false);
+    setLoading(true);
+
+    try {
+      const { error: signInError } = await signIn(email, password);
+
+      if (signInError) {
+        setError(signInError.message || 'Failed to sign in');
+        setLoading(false);
+        return;
+      }
+
+      navigate('/');
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.message || 'An error occurred during login');
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,6 +65,12 @@ const LoginPage = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
+                  {error}
+                </div>
+              )}
+              
               <div>
                 <label className="block text-sm font-medium text-black mb-2">
                   Email Address

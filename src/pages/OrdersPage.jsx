@@ -20,11 +20,11 @@ const OrdersPage = () => {
     fetchOrders();
   }, [user]);
 
-    if (loading) return <div className="p-12 text-center text-black">Cargando pedidos...</div>;
+    if (loading) return <div className="p-12 text-center text-black">Loading orders...</div>;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 bg-white min-h-screen">
-    <h1 className="text-3xl font-bold mb-8 text-black">Historial de pedidos</h1>
+    <h1 className="text-3xl font-bold mb-8 text-black">Order History</h1>
       
       {orders.length === 0 ? (
           <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-200">
