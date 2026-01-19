@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { gallerySync } from '@/lib/gallerySync';
 
 const ModelsSection = () => {
   const [models, setModels] = useState([
@@ -39,33 +40,22 @@ const ModelsSection = () => {
 
   useEffect(() => {
     try {
-      // Escuchar cambios de galería desde el panel admin usando storage event
-      const handleStorageChange = (event) => {
-        if (event.key === 'gallery_images' && event.newValue) {
-          try {
-            const updatedImages = JSON.parse(event.newValue);
-            if (updatedImages.length > 0) {
-              const updatedModels = updatedImages.map((img, index) => ({
-                id: (index + 1).toString(),
-                url: img.url || img,
-                name: `SOCKS OFICIAL ${index + 1}`,
-                rating: 4.5 + Math.random() * 0.4,
-                reviews: Math.floor(100 + Math.random() * 200),
-                price: 30.00
-              }));
-              setModels(updatedModels);
-            }
-          } catch (error) {
-            console.error('Error parsing gallery images:', error);
-          }
+      // Escuchar cambios de galería desde el panel admin
+      const unsubscribe = gallerySync.onChange((syncData) => {
+        if (syncData && syncData.images && syncData.images.length > 0) {
+          const updatedModels = syncData.images.map((img, index) => ({
+            id: (index + 1).toString(),
+            url: img.url || img,
+            name: `SOCKS OFICIAL ${index + 1}`,
+            rating: 4.5 + Math.random() * 0.4,
+            reviews: Math.floor(100 + Math.random() * 200),
+            price: 30.00
+          }));
+          setModels(updatedModels);
         }
-      };
+      });
 
-      window.addEventListener('storage', handleStorageChange);
-
-      return () => {
-        window.removeEventListener('storage', handleStorageChange);
-      };
+      return unsubscribe;
     } catch (error) {
       console.error('Error in ModelsSection useEffect:', error);
     }

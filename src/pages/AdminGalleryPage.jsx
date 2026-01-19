@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import ImageGallerySelector from '@/components/ImageGallerySelector';
-import { syncManager } from '@/lib/syncManager';
+import { gallerySync } from '@/lib/gallerySync';
 
 export default function AdminGalleryPage() {
   const [images, setImages] = useState([]);
@@ -22,29 +22,29 @@ export default function AdminGalleryPage() {
   useEffect(() => {
     loadImages();
 
-    // Escuchar cambios de galería desde otros tabs/dispositivos
-    const unsubscribe = syncManager.onSync('gallery_images', (updatedImages) => {
-      setImages(updatedImages);
-      toast({
-        title: 'Sincronizado',
-        description: 'La galería ha sido actualizada desde otro dispositivo'
-      });
+    // Escuchar cambios de galería desde otros dispositivos
+    const unsubscribe = gallerySync.onChange((syncData) => {
+      if (syncData && syncData.images) {
+        setImages(syncData.images);
+        // No mostrar notificación en la misma pestaña que hizo el cambio
+      }
     });
 
     return unsubscribe;
-  }, [toast]);
+  }, []);
 
   const loadImages = async () => {
     try {
       setLoading(true);
-      const storedImages = syncManager.load('gallery_images');
-      setImages(storedImages);
+      const syncData = gallerySync.loadChanges();
+      if (syncData && syncData.images) {
+        setImages(syncData.images);
+      } else {
+        setImages([]);
+      }
     } catch (err) {
-      toast({
-        title: 'Error',
-        description: 'No se pudieron cargar las imágenes',
-        variant: 'destructive'
-      });
+      console.error('Error loading images:', err);
+      setImages([]);
     } finally {
       setLoading(false);
     }
@@ -64,7 +64,7 @@ export default function AdminGalleryPage() {
 
     const updatedImages = [...images, newImage];
     setImages(updatedImages);
-    syncManager.saveAndSync('gallery_images', updatedImages);
+    gallerySync.saveChanges(updatedImages);
 
     toast({
       title: 'Éxito',
@@ -79,7 +79,7 @@ export default function AdminGalleryPage() {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta imagen?')) {
       const updatedImages = images.filter(img => img.id !== imageId);
       setImages(updatedImages);
-      syncManager.saveAndSync('gallery_images', updatedImages);
+      gallerySync.saveChanges(updatedImages);
       setSelectedImage(null);
 
       toast({
@@ -99,11 +99,11 @@ export default function AdminGalleryPage() {
       } : img
     );
     setImages(updatedImages);
-    syncManager.saveAndSync('gallery_images', updatedImages);
+    gallerySync.saveChanges(updatedImages);
 
     toast({
       title: 'Éxito',
-      description: 'Imagen actualizada. Se sincronizará en todos tus dispositivos automáticamente.'
+      description: 'Imagen actualizada. Se sincronizará en todos tus dispositivos en 3 segundos.'
     });
   };
 

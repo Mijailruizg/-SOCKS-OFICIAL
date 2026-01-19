@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { galleryImages as defaultGalleryImages } from '@/data/gallery';
+import { gallerySync } from '@/lib/gallerySync';
 
 const ModelGallerySection = () => {
   const [galleryImages, setGalleryImages] = useState(defaultGalleryImages);
 
   useEffect(() => {
     try {
-      // Cargar imágenes desde localStorage si existen
-      const storedImages = localStorage.getItem('gallery_images');
-      if (storedImages) {
-        const parsed = JSON.parse(storedImages);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const imagePaths = parsed.map(img => {
+      // Escuchar cambios de galería desde admin o otros dispositivos
+      const unsubscribe = gallerySync.onChange((syncData) => {
+        if (syncData && syncData.images && syncData.images.length > 0) {
+          const imagePaths = syncData.images.map(img => {
             const baseUrl = img.url || img;
             if (img.cacheBuster) {
               return `${baseUrl}?v=${img.cacheBuster}`;
@@ -19,36 +18,16 @@ const ModelGallerySection = () => {
             return baseUrl;
           });
           setGalleryImages(imagePaths);
+        } else {
+          setGalleryImages(defaultGalleryImages);
         }
-      }
+      });
+
+      return unsubscribe;
     } catch (error) {
-      console.error('Error loading gallery:', error);
+      console.error('Error in ModelGallerySection:', error);
       setGalleryImages(defaultGalleryImages);
     }
-
-    // Escuchar cambios desde otros tabs
-    const handleStorageChange = (event) => {
-      if (event.key === 'gallery_images' && event.newValue) {
-        try {
-          const parsed = JSON.parse(event.newValue);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            const imagePaths = parsed.map(img => {
-              const baseUrl = img.url || img;
-              if (img.cacheBuster) {
-                return `${baseUrl}?v=${img.cacheBuster}`;
-              }
-              return baseUrl;
-            });
-            setGalleryImages(imagePaths);
-          }
-        } catch (error) {
-          console.error('Error parsing gallery:', error);
-        }
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   if (!galleryImages || galleryImages.length === 0) {
