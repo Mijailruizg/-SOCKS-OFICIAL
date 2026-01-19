@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { galleryLocalSync } from '@/lib/galleryLocalSync';
 
 const ModelsSection = () => {
   const [models, setModels] = useState([
     { 
       id: '1', 
-      url: '/galeria/2.jpeg',
+      image: '/galeria/2.jpeg',
       name: 'SOCKS OFICIAL 1',
       rating: 4.8,
       reviews: 256,
@@ -14,7 +13,7 @@ const ModelsSection = () => {
     },
     { 
       id: '2', 
-      url: '/galeria/4.jpeg',
+      image: '/galeria/4.jpeg',
       name: 'SOCKS OFICIAL 2',
       rating: 4.7,
       reviews: 198,
@@ -22,7 +21,7 @@ const ModelsSection = () => {
     },
     { 
       id: '3', 
-      url: '/galeria/5.jpeg',
+      image: '/galeria/5.jpeg',
       name: 'SOCKS OFICIAL 3',
       rating: 4.6,
       reviews: 142,
@@ -30,7 +29,7 @@ const ModelsSection = () => {
     },
     { 
       id: '4', 
-      url: '/galeria/3.jpeg',
+      image: '/galeria/3.jpeg',
       name: 'SOCKS OFICIAL 4',
       rating: 4.9,
       reviews: 187,
@@ -39,44 +38,35 @@ const ModelsSection = () => {
   ]);
 
   useEffect(() => {
-    try {
-      // Cargar imágenes inicialmente
-      const loadInitial = async () => {
-        const syncData = await galleryLocalSync.loadChanges();
-        if (syncData && syncData.images && syncData.images.length > 0) {
-          const updatedModels = syncData.images.map((img, index) => ({
+    const loadImages = async () => {
+      try {
+        const response = await fetch('/api/gallery');
+        if (!response.ok) throw new Error('Error fetching gallery');
+        
+        const data = await response.json();
+        if (data.images && Array.isArray(data.images) && data.images.length > 0) {
+          const updatedModels = data.images.map((img, index) => ({
             id: (index + 1).toString(),
-            url: img.url || img,
-            name: `SOCKS OFICIAL ${index + 1}`,
+            image: img.image || '/galeria/2.jpeg',
+            name: img.name || `SOCKS OFICIAL ${index + 1}`,
             rating: 4.5 + Math.random() * 0.4,
             reviews: Math.floor(100 + Math.random() * 200),
             price: 30.00
           }));
           setModels(updatedModels);
         }
-      };
+      } catch (error) {
+        console.error('Error loading gallery:', error);
+      }
+    };
 
-      loadInitial();
+    // Cargar inicial
+    loadImages();
 
-      // Escuchar cambios en tiempo real
-      const unsubscribe = galleryLocalSync.onChange((syncData) => {
-        if (syncData && syncData.images && syncData.images.length > 0) {
-          const updatedModels = syncData.images.map((img, index) => ({
-            id: (index + 1).toString(),
-            url: img.url || img,
-            name: `SOCKS OFICIAL ${index + 1}`,
-            rating: 4.5 + Math.random() * 0.4,
-            reviews: Math.floor(100 + Math.random() * 200),
-            price: 30.00
-          }));
-          setModels(updatedModels);
-        }
-      });
+    // Verificar cambios cada 2 segundos
+    const pollInterval = setInterval(loadImages, 2000);
 
-      return unsubscribe;
-    } catch (error) {
-      console.error('Error in ModelsSection useEffect:', error);
-    }
+    return () => clearInterval(pollInterval);
   }, []);
 
   return (
@@ -100,7 +90,7 @@ const ModelsSection = () => {
               {/* Imagen */}
               <div className="relative overflow-hidden bg-gray-100 mb-4 aspect-[3/5] rounded-3xl">
                 <img
-                  src={model.url}
+                  src={model.image}
                   alt={model.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   onError={(e) => {

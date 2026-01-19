@@ -1,50 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { galleryImages as defaultGalleryImages } from '@/data/gallery';
-import { galleryLocalSync } from '@/lib/galleryLocalSync';
 
 const ModelGallerySection = () => {
   const [galleryImages, setGalleryImages] = useState(defaultGalleryImages);
 
   useEffect(() => {
-    try {
-      // Cargar imágenes inicialmente
-      const loadInitial = async () => {
-        const syncData = await galleryLocalSync.loadChanges();
-        if (syncData && syncData.images && syncData.images.length > 0) {
-          const imagePaths = syncData.images.map(img => {
-            const baseUrl = img.url || img;
-            if (img.cacheBuster) {
-              return `${baseUrl}?v=${img.cacheBuster}`;
-            }
-            return baseUrl;
-          });
-          setGalleryImages(imagePaths);
-        }
-      };
-
-      loadInitial();
-
-      // Escuchar cambios en tiempo real
-      const unsubscribe = galleryLocalSync.onChange((syncData) => {
-        if (syncData && syncData.images && syncData.images.length > 0) {
-          const imagePaths = syncData.images.map(img => {
-            const baseUrl = img.url || img;
-            if (img.cacheBuster) {
-              return `${baseUrl}?v=${img.cacheBuster}`;
-            }
-            return baseUrl;
-          });
+    const loadImages = async () => {
+      try {
+        const response = await fetch('/api/gallery');
+        if (!response.ok) throw new Error('Error fetching gallery');
+        
+        const data = await response.json();
+        if (data.images && Array.isArray(data.images) && data.images.length > 0) {
+          const imagePaths = data.images.map(img => img.image || img);
           setGalleryImages(imagePaths);
         } else {
           setGalleryImages(defaultGalleryImages);
         }
-      });
+      } catch (error) {
+        console.error('Error loading gallery:', error);
+        setGalleryImages(defaultGalleryImages);
+      }
+    };
 
-      return unsubscribe;
-    } catch (error) {
-      console.error('Error in ModelGallerySection:', error);
-      setGalleryImages(defaultGalleryImages);
-    }
+    // Cargar inicial
+    loadImages();
+
+    // Verificar cambios cada 2 segundos
+    const pollInterval = setInterval(loadImages, 2000);
+
+    return () => clearInterval(pollInterval);
   }, []);
 
   if (!galleryImages || galleryImages.length === 0) {

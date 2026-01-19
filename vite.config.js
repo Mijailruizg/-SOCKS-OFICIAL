@@ -9,16 +9,12 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src')
     }
   },
-  // Base path: use VITE_BASE env var when set (for GitHub Pages), otherwise '/'
   base: process.env.VITE_BASE || '/',
   server: {
-    host: true,
-    port: 3000
-  }
-  ,
+    host: '0.0.0.0',
+    port: 3002
+  },
   build: {
-    // Increase chunk size warning limit to reduce noise during build (value in KB).
-    // Adjust as needed; 2000 KB = 2 MB
     chunkSizeWarningLimit: 2000
   }
 })

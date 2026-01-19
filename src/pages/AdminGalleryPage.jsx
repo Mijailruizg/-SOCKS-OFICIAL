@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import ImageGallerySelector from '@/components/ImageGallerySelector';
-import { galleryLocalSync } from '@/lib/galleryLocalSync';
 
 export default function AdminGalleryPage() {
   const [images, setImages] = useState([]);
@@ -22,30 +20,31 @@ export default function AdminGalleryPage() {
   useEffect(() => {
     loadImages();
 
-    // Escuchar cambios de otros tabs/dispositivos
-    const unsubscribe = galleryLocalSync.onChange((syncData) => {
-      if (syncData && syncData.images) {
-        setImages(syncData.images);
-      }
-    });
+    // Verificar cambios cada 2 segundos (sincronización en tiempo real)
+    const pollInterval = setInterval(loadImages, 2000);
 
-    return unsubscribe;
+    return () => clearInterval(pollInterval);
   }, []);
 
   const loadImages = async () => {
     try {
       setLoading(true);
-      const syncData = await galleryLocalSync.loadChanges();
-      if (syncData && syncData.images) {
-        setImages(syncData.images);
+      const response = await fetch('/api/gallery');
+      if (!response.ok) throw new Error('Error fetching gallery');
+      
+      const data = await response.json();
+      if (data.images && Array.isArray(data.images)) {
+        setImages(data.images);
       }
     } catch (err) {
       console.error('Error loading images:', err);
-      toast({
-        title: 'Error',
-        description: 'No se pudieron cargar las imágenes',
-        variant: 'destructive'
-      });
+      if (loading) {
+        toast({
+          title: 'Error',
+          description: 'No se pudieron cargar las imágenes',
+          variant: 'destructive'
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -56,24 +55,35 @@ export default function AdminGalleryPage() {
 
     const newImage = {
       id: Date.now().toString(),
-      url: imageUrl,
-      title: editingImageTitle || 'Nueva imagen',
+      name: editingImageTitle || 'Nueva imagen',
+      image: imageUrl,
       size: imageSize,
-      created_at: new Date().toISOString(),
-      cacheBuster: Date.now()
+      created_at: new Date().toISOString()
     };
 
     const updatedImages = [...images, newImage];
-    setImages(updatedImages);
     
     try {
-      await galleryLocalSync.saveChanges(updatedImages);
+      const response = await fetch('/api/gallery', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ images: updatedImages })
+      });
+
+      if (!response.ok) throw new Error('Error saving image');
+      
+      setImages(updatedImages);
       toast({
         title: 'Éxito',
         description: '✅ Imagen agregada. Se ve en todos tus dispositivos al instante.'
       });
     } catch (error) {
       console.error('Error saving image:', error);
+      toast({
+        title: 'Error',
+        description: 'Error al guardar la imagen',
+        variant: 'destructive'
+      });
     }
 
     setEditingImageTitle('');
@@ -83,10 +93,17 @@ export default function AdminGalleryPage() {
   const handleDeleteImage = async (imageId) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta imagen?')) {
       const updatedImages = images.filter(img => img.id !== imageId);
-      setImages(updatedImages);
       
       try {
-        await galleryLocalSync.saveChanges(updatedImages);
+        const response = await fetch('/api/gallery', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ images: updatedImages })
+        });
+
+        if (!response.ok) throw new Error('Error deleting image');
+        
+        setImages(updatedImages);
         setSelectedImage(null);
         toast({
           title: 'Éxito',
@@ -94,29 +111,41 @@ export default function AdminGalleryPage() {
         });
       } catch (error) {
         console.error('Error deleting image:', error);
+        toast({
+          title: 'Error',
+          description: 'Error al eliminar la imagen',
+          variant: 'destructive'
+        });
       }
     }
   };
 
-  const handleEditImage = async (imageId, newUrl) => {
+  const handleEditImage = async (imageId, updatedImageData) => {
     const updatedImages = images.map(img =>
-      img.id === imageId ? { 
-        ...img, 
-        url: newUrl,
-        updated_at: new Date().toISOString(),
-        cacheBuster: Date.now()
-      } : img
+      img.id === imageId ? { ...img, ...updatedImageData } : img
     );
-    setImages(updatedImages);
     
     try {
-      await galleryLocalSync.saveChanges(updatedImages);
+      const response = await fetch('/api/gallery', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ images: updatedImages })
+      });
+
+      if (!response.ok) throw new Error('Error updating image');
+      
+      setImages(updatedImages);
       toast({
         title: 'Éxito',
         description: '✅ Imagen actualizada. Se sincroniza al instante en todos tus dispositivos.'
       });
     } catch (error) {
       console.error('Error updating image:', error);
+      toast({
+        title: 'Error',
+        description: 'Error al actualizar la imagen',
+        variant: 'destructive'
+      });
     }
   };
 
@@ -197,8 +226,8 @@ export default function AdminGalleryPage() {
                 >
                   <div className="aspect-square overflow-hidden bg-slate-900">
                     <img
-                      src={image.url}
-                      alt={image.title}
+                      src={image.image}
+                      alt={image.name}
                       style={{
                         width: '100%',
                         height: '100%',
@@ -211,7 +240,7 @@ export default function AdminGalleryPage() {
                   </div>
 
                   <div className="p-4">
-                    <h4 className="font-bold text-white mb-2">{image.title}</h4>
+                    <h4 className="font-bold text-white mb-2">{image.name}</h4>
                     <p className="text-xs text-slate-400 mb-2">Tamaño: {sizeConfig.label}</p>
                     <p className="text-xs text-slate-500 mb-4">
                       {new Date(image.created_at).toLocaleDateString('es-ES')}
@@ -250,8 +279,8 @@ export default function AdminGalleryPage() {
                 <label className="block text-sm font-medium text-slate-200 mb-2">Título</label>
                 <input
                   type="text"
-                  value={selectedImage.title}
-                  onChange={(e) => setSelectedImage({ ...selectedImage, title: e.target.value })}
+                  value={selectedImage.name}
+                  onChange={(e) => setSelectedImage({ ...selectedImage, name: e.target.value })}
                   className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
                 />
               </div>
@@ -259,8 +288,8 @@ export default function AdminGalleryPage() {
               <div>
                 <label className="block text-sm font-medium text-slate-200 mb-2">Nueva Imagen</label>
                 <ImageGallerySelector
-                  currentImageUrl={selectedImage.url}
-                  onSelect={(newUrl) => setSelectedImage({ ...selectedImage, url: newUrl })}
+                  currentImageUrl={selectedImage.image}
+                  onSelect={(newUrl) => setSelectedImage({ ...selectedImage, image: newUrl })}
                 />
               </div>
 
@@ -288,7 +317,7 @@ export default function AdminGalleryPage() {
                 <label className="block text-sm font-medium text-slate-200 mb-2">Vista Previa</label>
                 <div className="bg-slate-900 rounded-lg overflow-hidden">
                   <img
-                    src={selectedImage.url}
+                    src={selectedImage.image}
                     alt="Preview"
                     style={{
                       width: '100%',
@@ -306,7 +335,11 @@ export default function AdminGalleryPage() {
               <div className="flex gap-4">
                 <button
                   onClick={() => {
-                    handleEditImage(selectedImage.id, selectedImage.url);
+                    handleEditImage(selectedImage.id, {
+                      name: selectedImage.name,
+                      image: selectedImage.image,
+                      size: selectedImage.size
+                    });
                     setSelectedImage(null);
                   }}
                   className="flex-1 px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition"

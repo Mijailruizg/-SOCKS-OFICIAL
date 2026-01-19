@@ -2,35 +2,24 @@
   "images": [
     {
       "id": "1",
-      "url": "/galeria/2.jpeg",
-      "title": "SOCKS OFICIAL 1",
-      "size": "normal",
-      "created_at": "2026-01-19T00:00:00.000Z",
-      "cacheBuster": 0
+      "name": "SOCKS OFICIAL 1",
+      "image": "/galeria/2.jpeg"
     },
     {
       "id": "2",
-      "url": "/galeria/4.jpeg",
-      "title": "SOCKS OFICIAL 2",
-      "size": "normal",
-      "created_at": "2026-01-19T00:00:00.000Z",
-      "cacheBuster": 0
+      "name": "SOCKS OFICIAL 2",
+      "image": "/galeria/4.jpeg"
     },
     {
       "id": "3",
-      "url": "/galeria/5.jpeg",
-      "title": "SOCKS OFICIAL 3",
-      "size": "normal",
-      "created_at": "2026-01-19T00:00:00.000Z",
-      "cacheBuster": 0
+      "name": "SOCKS OFICIAL 3",
+      "image": "/galeria/5.jpeg"
     },
     {
       "id": "4",
-      "url": "/galeria/3.jpeg",
-      "title": "SOCKS OFICIAL 4",
-      "size": "normal",
-      "created_at": "2026-01-19T00:00:00.000Z",
-      "cacheBuster": 0
+      "name": "SOCKS OFICIAL 4",
+      "image": "/galeria/3.jpeg"
     }
-  ]
+  ],
+  "updatedAt": "2024-01-01T00:00:00.000Z"
 }
