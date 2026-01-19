@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import ImageGallerySelector from '@/components/ImageGallerySelector';
-import { gallerySync } from '@/lib/gallerySync';
+import { gallerySupabaseSync } from '@/lib/gallerySupabaseSync';
 
 export default function AdminGalleryPage() {
   const [images, setImages] = useState([]);
@@ -23,10 +23,9 @@ export default function AdminGalleryPage() {
     loadImages();
 
     // Escuchar cambios de galería desde otros dispositivos
-    const unsubscribe = gallerySync.onChange((syncData) => {
+    const unsubscribe = gallerySupabaseSync.onChange((syncData) => {
       if (syncData && syncData.images) {
         setImages(syncData.images);
-        // No mostrar notificación en la misma pestaña que hizo el cambio
       }
     });
 
@@ -36,7 +35,7 @@ export default function AdminGalleryPage() {
   const loadImages = async () => {
     try {
       setLoading(true);
-      const syncData = gallerySync.loadChanges();
+      const syncData = await gallerySupabaseSync.loadChanges();
       if (syncData && syncData.images) {
         setImages(syncData.images);
       } else {
@@ -50,7 +49,7 @@ export default function AdminGalleryPage() {
     }
   };
 
-  const handleAddImage = (imageUrl) => {
+  const handleAddImage = async (imageUrl) => {
     if (!imageUrl) return;
 
     const newImage = {
@@ -64,32 +63,50 @@ export default function AdminGalleryPage() {
 
     const updatedImages = [...images, newImage];
     setImages(updatedImages);
-    gallerySync.saveChanges(updatedImages);
-
-    toast({
-      title: 'Éxito',
-      description: 'Imagen agregada. Se mostrará en todos los dispositivos en segundos.'
-    });
+    
+    try {
+      await gallerySupabaseSync.saveChanges(updatedImages);
+      toast({
+        title: 'Éxito',
+        description: 'Imagen agregada. Se mostrará en todos los dispositivos al instante.'
+      });
+    } catch (error) {
+      console.error('Error saving image:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo guardar la imagen. Intenta de nuevo.',
+        variant: 'destructive'
+      });
+    }
 
     setEditingImageTitle('');
     setImageSize('normal');
   };
 
-  const handleDeleteImage = (imageId) => {
+  const handleDeleteImage = async (imageId) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta imagen?')) {
       const updatedImages = images.filter(img => img.id !== imageId);
       setImages(updatedImages);
-      gallerySync.saveChanges(updatedImages);
-      setSelectedImage(null);
-
-      toast({
-        title: 'Éxito',
-        description: 'Imagen eliminada en todos los dispositivos'
-      });
+      
+      try {
+        await gallerySupabaseSync.saveChanges(updatedImages);
+        setSelectedImage(null);
+        toast({
+          title: 'Éxito',
+          description: 'Imagen eliminada en todos los dispositivos'
+        });
+      } catch (error) {
+        console.error('Error deleting image:', error);
+        toast({
+          title: 'Error',
+          description: 'No se pudo eliminar la imagen. Intenta de nuevo.',
+          variant: 'destructive'
+        });
+      }
     }
   };
 
-  const handleEditImage = (imageId, newUrl) => {
+  const handleEditImage = async (imageId, newUrl) => {
     const updatedImages = images.map(img =>
       img.id === imageId ? { 
         ...img, 
@@ -99,12 +116,21 @@ export default function AdminGalleryPage() {
       } : img
     );
     setImages(updatedImages);
-    gallerySync.saveChanges(updatedImages);
-
-    toast({
-      title: 'Éxito',
-      description: 'Imagen actualizada. Se sincronizará en todos tus dispositivos en 3 segundos.'
-    });
+    
+    try {
+      await gallerySupabaseSync.saveChanges(updatedImages);
+      toast({
+        title: 'Éxito',
+        description: 'Imagen actualizada en todos tus dispositivos instantáneamente.'
+      });
+    } catch (error) {
+      console.error('Error updating image:', error);
+      toast({
+        title: 'Error',
+        description: 'No se pudo actualizar la imagen. Intenta de nuevo.',
+        variant: 'destructive'
+      });
+    }
   };
 
   if (loading) {

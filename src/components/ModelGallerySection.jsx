@@ -1,14 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { galleryImages as defaultGalleryImages } from '@/data/gallery';
-import { gallerySync } from '@/lib/gallerySync';
+import { gallerySupabaseSync } from '@/lib/gallerySupabaseSync';
 
 const ModelGallerySection = () => {
   const [galleryImages, setGalleryImages] = useState(defaultGalleryImages);
 
   useEffect(() => {
     try {
+      // Cargar imágenes inicialmente
+      const loadInitial = async () => {
+        const syncData = await gallerySupabaseSync.loadChanges();
+        if (syncData && syncData.images && syncData.images.length > 0) {
+          const imagePaths = syncData.images.map(img => {
+            const baseUrl = img.url || img;
+            if (img.cacheBuster) {
+              return `${baseUrl}?v=${img.cacheBuster}`;
+            }
+            return baseUrl;
+          });
+          setGalleryImages(imagePaths);
+        }
+      };
+
+      loadInitial();
+
       // Escuchar cambios de galería desde admin o otros dispositivos
-      const unsubscribe = gallerySync.onChange((syncData) => {
+      const unsubscribe = gallerySupabaseSync.onChange((syncData) => {
         if (syncData && syncData.images && syncData.images.length > 0) {
           const imagePaths = syncData.images.map(img => {
             const baseUrl = img.url || img;

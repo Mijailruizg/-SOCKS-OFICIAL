@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { gallerySync } from '@/lib/gallerySync';
+import { gallerySupabaseSync } from '@/lib/gallerySupabaseSync';
 
 const ModelsSection = () => {
   const [models, setModels] = useState([
@@ -40,8 +40,26 @@ const ModelsSection = () => {
 
   useEffect(() => {
     try {
+      // Cargar imágenes inicialmente
+      const loadInitial = async () => {
+        const syncData = await gallerySupabaseSync.loadChanges();
+        if (syncData && syncData.images && syncData.images.length > 0) {
+          const updatedModels = syncData.images.map((img, index) => ({
+            id: (index + 1).toString(),
+            url: img.url || img,
+            name: `SOCKS OFICIAL ${index + 1}`,
+            rating: 4.5 + Math.random() * 0.4,
+            reviews: Math.floor(100 + Math.random() * 200),
+            price: 30.00
+          }));
+          setModels(updatedModels);
+        }
+      };
+
+      loadInitial();
+
       // Escuchar cambios de galería desde el panel admin
-      const unsubscribe = gallerySync.onChange((syncData) => {
+      const unsubscribe = gallerySupabaseSync.onChange((syncData) => {
         if (syncData && syncData.images && syncData.images.length > 0) {
           const updatedModels = syncData.images.map((img, index) => ({
             id: (index + 1).toString(),
