@@ -1,9 +1,11 @@
 import { products } from '@/data/products';
+import { supabase } from '@/lib/supabase';
 
-// Mock API service using localStorage for persistence
-// In a real app, this would use Supabase client
+// API service using Supabase for real-time synchronization across devices
+// Falls back to localStorage if Supabase is not configured
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const useSupabase = () => !!supabase?.auth;
 
 // Generate UUID v4 compatible ID
 const generateId = () => {

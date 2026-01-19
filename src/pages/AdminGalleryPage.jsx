@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import ImageGallerySelector from '@/components/ImageGallerySelector';
+import { syncManager } from '@/lib/syncManager';
 
 export default function AdminGalleryPage() {
   const [images, setImages] = useState([]);
@@ -20,12 +21,23 @@ export default function AdminGalleryPage() {
 
   useEffect(() => {
     loadImages();
-  }, []);
+
+    // Escuchar cambios de galería desde otros tabs/dispositivos
+    const unsubscribe = syncManager.onSync('gallery_images', (updatedImages) => {
+      setImages(updatedImages);
+      toast({
+        title: 'Sincronizado',
+        description: 'La galería ha sido actualizada desde otro dispositivo'
+      });
+    });
+
+    return unsubscribe;
+  }, [toast]);
 
   const loadImages = async () => {
     try {
       setLoading(true);
-      const storedImages = JSON.parse(localStorage.getItem('gallery_images') || '[]');
+      const storedImages = syncManager.load('gallery_images');
       setImages(storedImages);
     } catch (err) {
       toast({
@@ -46,16 +58,17 @@ export default function AdminGalleryPage() {
       url: imageUrl,
       title: editingImageTitle || 'Nueva imagen',
       size: imageSize,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      cacheBuster: Date.now()
     };
 
     const updatedImages = [...images, newImage];
     setImages(updatedImages);
-    localStorage.setItem('gallery_images', JSON.stringify(updatedImages));
+    syncManager.saveAndSync('gallery_images', updatedImages);
 
     toast({
       title: 'Éxito',
-      description: 'Imagen agregada a la galería'
+      description: 'Imagen agregada. Se mostrará en todos los dispositivos en segundos.'
     });
 
     setEditingImageTitle('');
@@ -66,26 +79,31 @@ export default function AdminGalleryPage() {
     if (window.confirm('¿Estás seguro de que deseas eliminar esta imagen?')) {
       const updatedImages = images.filter(img => img.id !== imageId);
       setImages(updatedImages);
-      localStorage.setItem('gallery_images', JSON.stringify(updatedImages));
+      syncManager.saveAndSync('gallery_images', updatedImages);
       setSelectedImage(null);
 
       toast({
         title: 'Éxito',
-        description: 'Imagen eliminada correctamente'
+        description: 'Imagen eliminada en todos los dispositivos'
       });
     }
   };
 
   const handleEditImage = (imageId, newUrl) => {
     const updatedImages = images.map(img =>
-      img.id === imageId ? { ...img, url: newUrl } : img
+      img.id === imageId ? { 
+        ...img, 
+        url: newUrl,
+        updated_at: new Date().toISOString(),
+        cacheBuster: Date.now()
+      } : img
     );
     setImages(updatedImages);
-    localStorage.setItem('gallery_images', JSON.stringify(updatedImages));
+    syncManager.saveAndSync('gallery_images', updatedImages);
 
     toast({
       title: 'Éxito',
-      description: 'Imagen actualizada correctamente'
+      description: 'Imagen actualizada. Se sincronizará en todos tus dispositivos automáticamente.'
     });
   };
 
