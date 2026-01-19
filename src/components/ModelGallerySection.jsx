@@ -19,6 +19,9 @@ const ModelGallerySection = () => {
           return baseUrl;
         });
         setGalleryImages(imagePaths);
+      } else {
+        // Si no hay imágenes en localStorage, usar las del archivo de configuración
+        setGalleryImages(defaultGalleryImages);
       }
     };
 
@@ -26,14 +29,18 @@ const ModelGallerySection = () => {
 
     // Escuchar cambios desde otros dispositivos/tabs
     const unsubscribe = syncManager.onSync('gallery_images', (updatedImages) => {
-      const imagePaths = updatedImages.map(img => {
-        const baseUrl = img.url || img;
-        if (img.cacheBuster) {
-          return syncManager.addCacheBuster(baseUrl, img.cacheBuster);
-        }
-        return baseUrl;
-      });
-      setGalleryImages(imagePaths);
+      if (updatedImages.length > 0) {
+        const imagePaths = updatedImages.map(img => {
+          const baseUrl = img.url || img;
+          if (img.cacheBuster) {
+            return syncManager.addCacheBuster(baseUrl, img.cacheBuster);
+          }
+          return baseUrl;
+        });
+        setGalleryImages(imagePaths);
+      } else {
+        setGalleryImages(defaultGalleryImages);
+      }
     });
 
     return unsubscribe;
