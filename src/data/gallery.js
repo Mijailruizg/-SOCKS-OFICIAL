@@ -2,10 +2,10 @@
 // Ejemplo de nombres: 'modelo1.jpg', 'modelo2.jpg'. Ya disponible: '521320355_18072665359996750_586440822232935836_n.jpg'
 
 export const galleryImages = [
-  '/galeria/producto 1/2.jpeg',
-  '/galeria/producto 1/4.jpeg',
-  '/galeria/producto 1/5.jpeg',
-  '/galeria/producto 1/3.jpeg',
+  '/galeria/2.jpeg',
+  '/galeria/4.jpeg',
+  '/galeria/5.jpeg',
+  '/galeria/3.jpeg',
   // La imagen '521320355_18072665359996750_586440822232935836_n.jpg' se excluye por petición.
 ];
 

@@ -5,7 +5,7 @@ const ModelsSection = () => {
   const [models, setModels] = useState([
     { 
       id: '1', 
-      url: '/galeria/producto 1/2.jpeg',
+      url: '/galeria/2.jpeg',
       name: 'SOCKS OFICIAL 1',
       rating: 4.8,
       reviews: 256,
@@ -13,7 +13,7 @@ const ModelsSection = () => {
     },
     { 
       id: '2', 
-      url: '/galeria/producto 1/4.jpeg',
+      url: '/galeria/4.jpeg',
       name: 'SOCKS OFICIAL 2',
       rating: 4.7,
       reviews: 198,
@@ -21,7 +21,7 @@ const ModelsSection = () => {
     },
     { 
       id: '3', 
-      url: '/galeria/producto 1/5.jpeg',
+      url: '/galeria/5.jpeg',
       name: 'SOCKS OFICIAL 3',
       rating: 4.6,
       reviews: 142,
@@ -29,7 +29,7 @@ const ModelsSection = () => {
     },
     { 
       id: '4', 
-      url: '/galeria/producto 1/3.jpeg',
+      url: '/galeria/3.jpeg',
       name: 'SOCKS OFICIAL 4',
       rating: 4.9,
       reviews: 187,
