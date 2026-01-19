@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { galleryImages as defaultGalleryImages } from '@/data/gallery';
-import { gallerySupabaseSync } from '@/lib/gallerySupabaseSync';
+import { galleryLocalSync } from '@/lib/galleryLocalSync';
 
 const ModelGallerySection = () => {
   const [galleryImages, setGalleryImages] = useState(defaultGalleryImages);
@@ -9,7 +9,7 @@ const ModelGallerySection = () => {
     try {
       // Cargar imágenes inicialmente
       const loadInitial = async () => {
-        const syncData = await gallerySupabaseSync.loadChanges();
+        const syncData = await galleryLocalSync.loadChanges();
         if (syncData && syncData.images && syncData.images.length > 0) {
           const imagePaths = syncData.images.map(img => {
             const baseUrl = img.url || img;
@@ -24,8 +24,8 @@ const ModelGallerySection = () => {
 
       loadInitial();
 
-      // Escuchar cambios de galería desde admin o otros dispositivos
-      const unsubscribe = gallerySupabaseSync.onChange((syncData) => {
+      // Escuchar cambios en tiempo real
+      const unsubscribe = galleryLocalSync.onChange((syncData) => {
         if (syncData && syncData.images && syncData.images.length > 0) {
           const imagePaths = syncData.images.map(img => {
             const baseUrl = img.url || img;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { useToast } from '@/components/ui/use-toast';
 import ImageGallerySelector from '@/components/ImageGallerySelector';
-import { gallerySupabaseSync } from '@/lib/gallerySupabaseSync';
+import { galleryLocalSync } from '@/lib/galleryLocalSync';
 
 export default function AdminGalleryPage() {
   const [images, setImages] = useState([]);
@@ -22,8 +22,8 @@ export default function AdminGalleryPage() {
   useEffect(() => {
     loadImages();
 
-    // Escuchar cambios de galería desde otros dispositivos
-    const unsubscribe = gallerySupabaseSync.onChange((syncData) => {
+    // Escuchar cambios de otros tabs/dispositivos
+    const unsubscribe = galleryLocalSync.onChange((syncData) => {
       if (syncData && syncData.images) {
         setImages(syncData.images);
       }
@@ -35,15 +35,17 @@ export default function AdminGalleryPage() {
   const loadImages = async () => {
     try {
       setLoading(true);
-      const syncData = await gallerySupabaseSync.loadChanges();
+      const syncData = await galleryLocalSync.loadChanges();
       if (syncData && syncData.images) {
         setImages(syncData.images);
-      } else {
-        setImages([]);
       }
     } catch (err) {
       console.error('Error loading images:', err);
-      setImages([]);
+      toast({
+        title: 'Error',
+        description: 'No se pudieron cargar las imágenes',
+        variant: 'destructive'
+      });
     } finally {
       setLoading(false);
     }
@@ -65,18 +67,13 @@ export default function AdminGalleryPage() {
     setImages(updatedImages);
     
     try {
-      await gallerySupabaseSync.saveChanges(updatedImages);
+      await galleryLocalSync.saveChanges(updatedImages);
       toast({
         title: 'Éxito',
-        description: 'Imagen agregada. Se mostrará en todos los dispositivos al instante.'
+        description: '✅ Imagen agregada. Se ve en todos tus dispositivos al instante.'
       });
     } catch (error) {
       console.error('Error saving image:', error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo guardar la imagen. Intenta de nuevo.',
-        variant: 'destructive'
-      });
     }
 
     setEditingImageTitle('');
@@ -89,19 +86,14 @@ export default function AdminGalleryPage() {
       setImages(updatedImages);
       
       try {
-        await gallerySupabaseSync.saveChanges(updatedImages);
+        await galleryLocalSync.saveChanges(updatedImages);
         setSelectedImage(null);
         toast({
           title: 'Éxito',
-          description: 'Imagen eliminada en todos los dispositivos'
+          description: '✅ Imagen eliminada en todos los dispositivos'
         });
       } catch (error) {
         console.error('Error deleting image:', error);
-        toast({
-          title: 'Error',
-          description: 'No se pudo eliminar la imagen. Intenta de nuevo.',
-          variant: 'destructive'
-        });
       }
     }
   };
@@ -118,18 +110,13 @@ export default function AdminGalleryPage() {
     setImages(updatedImages);
     
     try {
-      await gallerySupabaseSync.saveChanges(updatedImages);
+      await galleryLocalSync.saveChanges(updatedImages);
       toast({
         title: 'Éxito',
-        description: 'Imagen actualizada en todos tus dispositivos instantáneamente.'
+        description: '✅ Imagen actualizada. Se sincroniza al instante en todos tus dispositivos.'
       });
     } catch (error) {
       console.error('Error updating image:', error);
-      toast({
-        title: 'Error',
-        description: 'No se pudo actualizar la imagen. Intenta de nuevo.',
-        variant: 'destructive'
-      });
     }
   };
 

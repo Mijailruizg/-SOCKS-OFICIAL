@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { gallerySupabaseSync } from '@/lib/gallerySupabaseSync';
+import { galleryLocalSync } from '@/lib/galleryLocalSync';
 
 const ModelsSection = () => {
   const [models, setModels] = useState([
@@ -42,7 +42,7 @@ const ModelsSection = () => {
     try {
       // Cargar imágenes inicialmente
       const loadInitial = async () => {
-        const syncData = await gallerySupabaseSync.loadChanges();
+        const syncData = await galleryLocalSync.loadChanges();
         if (syncData && syncData.images && syncData.images.length > 0) {
           const updatedModels = syncData.images.map((img, index) => ({
             id: (index + 1).toString(),
@@ -58,8 +58,8 @@ const ModelsSection = () => {
 
       loadInitial();
 
-      // Escuchar cambios de galería desde el panel admin
-      const unsubscribe = gallerySupabaseSync.onChange((syncData) => {
+      // Escuchar cambios en tiempo real
+      const unsubscribe = galleryLocalSync.onChange((syncData) => {
         if (syncData && syncData.images && syncData.images.length > 0) {
           const updatedModels = syncData.images.map((img, index) => ({
             id: (index + 1).toString(),
