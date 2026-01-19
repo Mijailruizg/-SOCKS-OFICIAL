@@ -15,4 +15,10 @@ export default defineConfig({
     host: true,
     port: 3000
   }
+  ,
+  build: {
+    // Increase chunk size warning limit to reduce noise during build (value in KB).
+    // Adjust as needed; 2000 KB = 2 MB
+    chunkSizeWarningLimit: 2000
+  }
 })
