@@ -1,84 +1,108 @@
-// Servicio de sincronización entre dispositivos
-// Usa un sistema de polling para verificar cambios
+/**
+ * Gallery Synchronization Helper
+ * Centraliza todas las llamadas a la API de galería
+ */
 
-const SYNC_KEY = 'admin_gallery_sync';
-const SYNC_INTERVAL = 3000; // Verificar cada 3 segundos
+const API_BASE_URL = () => `http://${window.location.hostname}:3000/api/gallery`;
+const CACHE_BUSTER = () => `?t=${Date.now()}`;
 
 export const gallerySync = {
-  // Guardar cambios en "base de datos" simulada
-  saveChanges: (imageData) => {
-    const timestamp = Date.now();
-    const syncData = {
-      images: imageData,
-      timestamp: timestamp,
-      version: (parseInt(localStorage.getItem(`${SYNC_KEY}_version`) || '0') + 1)
-    };
-    
-    localStorage.setItem(SYNC_KEY, JSON.stringify(syncData));
-    localStorage.setItem(`${SYNC_KEY}_version`, syncData.version.toString());
-    localStorage.setItem(`${SYNC_KEY}_updated`, timestamp.toString());
-    
-    // Forzar recarga en otros tabs
-    window.dispatchEvent(new StorageEvent('storage', {
-      key: SYNC_KEY,
-      newValue: JSON.stringify(syncData),
-      oldValue: null,
-      storageArea: localStorage,
-      url: window.location.href
-    }));
-    
-    return syncData;
-  },
-
-  // Cargar último cambio
-  loadChanges: () => {
+  /**
+   * Obtener la galería actual
+   */
+  fetchGallery: async () => {
     try {
-      const data = localStorage.getItem(SYNC_KEY);
-      return data ? JSON.parse(data) : null;
-    } catch {
-      return null;
+      const url = `${API_BASE_URL()}${CACHE_BUSTER()}`;
+      console.log('📥 [Gallery Sync] GET:', url);
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      console.log(`✅ [Gallery Sync] Recibidas ${data.images.length} imágenes`);
+      return data;
+    } catch (error) {
+      console.error('❌ [Gallery Sync] Error fetching:', error);
+      throw error;
     }
   },
 
-  // Obtener versión actual
-  getVersion: () => {
-    return parseInt(localStorage.getItem(`${SYNC_KEY}_version`) || '0');
+  /**
+   * Actualizar la galería (agregar, editar o eliminar imágenes)
+   */
+  updateGallery: async (images) => {
+    try {
+      const url = `${API_BASE_URL()}${CACHE_BUSTER()}`;
+      console.log('📤 [Gallery Sync] POST:', url);
+      console.log(`📦 [Gallery Sync] Enviando ${images.length} imágenes`);
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ images })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log(`✅ [Gallery Sync] Actualización exitosa: ${images.length} imágenes`);
+      return data;
+    } catch (error) {
+      console.error('❌ [Gallery Sync] Error updating:', error);
+      throw error;
+    }
   },
 
-  // Escuchar cambios
-  onChange: (callback) => {
-    const checkChanges = () => {
-      const data = gallerySync.loadChanges();
-      if (data) {
-        callback(data);
-      }
-    };
+  /**
+   * Setup polling para sincronización en tiempo real
+   * @param {function} callback - Función a ejecutar cuando cambia la galería
+   * @param {number} interval - Intervalo en ms (default 3000)
+   */
+  setupPolling: (callback, interval = 3000) => {
+    let lastUpdate = null;
 
-    // Verificar al inicio
-    checkChanges();
-
-    // Verificar periódicamente
-    const interval = setInterval(checkChanges, SYNC_INTERVAL);
-
-    // Escuchar eventos de storage (otros tabs)
-    const handleStorageChange = (event) => {
-      if (event.key === SYNC_KEY && event.newValue) {
-        try {
-          const data = JSON.parse(event.newValue);
+    const poll = async () => {
+      try {
+        const data = await gallerySync.fetchGallery();
+        const currentUpdate = JSON.stringify(data.images);
+        
+        if (lastUpdate !== currentUpdate) {
+          console.log('🔄 [Gallery Sync] Cambios detectados - actualizando');
+          lastUpdate = currentUpdate;
           callback(data);
-        } catch (error) {
-          console.error('Error parsing sync data:', error);
         }
+      } catch (error) {
+        console.error('❌ [Gallery Sync] Poll error:', error);
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    // Ejecutar inmediatamente
+    poll();
 
-    // Retornar función de limpieza
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('storage', handleStorageChange);
-    };
+    // Luego ejecutar cada intervalo
+    return setInterval(poll, interval);
+  },
+
+  // Métodos heredados por compatibilidad
+  saveChanges: async (imageData) => {
+    return gallerySync.updateGallery(imageData);
+  },
+
+  loadChanges: async () => {
+    const data = await gallerySync.fetchGallery();
+    return data;
+  },
+
+  getVersion: () => {
+    return Date.now();
+  },
+
+  onChange: (callback) => {
+    return gallerySync.setupPolling(callback, 3000);
   }
 };
 

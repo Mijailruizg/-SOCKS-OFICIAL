@@ -111,7 +111,8 @@ export default function AdminGalleryPage() {
       const updatedImages = images.filter(img => img.id !== imageId);
       
       try {
-        const response = await fetch('/api/gallery', {
+        const apiUrl = `http://${window.location.hostname}:3000/api/gallery?t=${Date.now()}`;
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ images: updatedImages })
@@ -142,7 +143,8 @@ export default function AdminGalleryPage() {
     );
     
     try {
-      const response = await fetch('/api/gallery', {
+      const apiUrl = `http://${window.location.hostname}:3000/api/gallery?t=${Date.now()}`;
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ images: updatedImages })
