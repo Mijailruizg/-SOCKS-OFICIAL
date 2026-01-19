@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 
+// Cache buster - fuerza actualización en navegador
+const CACHE_BUSTER = '2026-01-19-v2';
+
 export default function AdminGalleryPage() {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
