@@ -17,6 +17,18 @@ const GALLERY_FILE = path.join(__dirname, 'src/data/gallery-config.json');
 // Middleware
 app.use(express.json());
 
+// CORS - Permitir requests desde cualquier origen
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 // Asegurar que el archivo de galería existe
 const ensureGalleryFile = () => {
   const dir = path.dirname(GALLERY_FILE);
@@ -46,9 +58,14 @@ ensureGalleryFile();
 // GET /api/gallery - Obtener la galería actual
 app.get('/api/gallery', (req, res) => {
   try {
+    if (!fs.existsSync(GALLERY_FILE)) {
+      console.log('⚠️  Archivo no existe, creando con datos por defecto...');
+      ensureGalleryFile();
+    }
     const data = fs.readFileSync(GALLERY_FILE, 'utf-8');
     const gallery = JSON.parse(data);
-    console.log(`📖 [GET /api/gallery] ${gallery.images.length} imágenes enviadas`);
+    console.log(`✅ [GET /api/gallery] Enviando ${gallery.images.length} imágenes`);
+    console.log(`   Archivo: ${GALLERY_FILE}`);
     res.json(gallery);
   } catch (error) {
     console.error('❌ Error leyendo galería:', error.message);
@@ -70,14 +87,23 @@ app.post('/api/gallery', (req, res) => {
       updatedAt: new Date().toISOString()
     };
 
-    fs.writeFileSync(GALLERY_FILE, JSON.stringify(gallery, null, 2));
+    // Guardar con ruta absoluta
+    const absolutePath = path.resolve(GALLERY_FILE);
+    fs.writeFileSync(absolutePath, JSON.stringify(gallery, null, 2));
+    
+    // Verificar que se guardó
+    const verifyRead = fs.readFileSync(absolutePath, 'utf-8');
+    const verifyData = JSON.parse(verifyRead);
 
-    console.log(`💾 [POST /api/gallery] Actualizado con ${images.length} imágenes`);
+    console.log(`💾 [POST /api/gallery] Guardado: ${images.length} imágenes`);
+    console.log(`   Ruta: ${absolutePath}`);
+    console.log(`   Verificación: ${verifyData.images.length} imágenes confirmadas`);
 
     res.json({ success: true, gallery });
   } catch (error) {
     console.error('❌ Error guardando galería:', error.message);
-    res.status(500).json({ error: 'Error updating gallery' });
+    console.error('   Stack:', error.stack);
+    res.status(500).json({ error: 'Error updating gallery', details: error.message });
   }
 });
 

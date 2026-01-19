@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import ImageGallerySelector from '@/components/ImageGallerySelector';
 
 export default function AdminGalleryPage() {
   const [images, setImages] = useState([]);
@@ -20,8 +19,8 @@ export default function AdminGalleryPage() {
   useEffect(() => {
     loadImages();
 
-    // Verificar cambios cada 2 segundos (sincronización en tiempo real)
-    const pollInterval = setInterval(loadImages, 2000);
+    // Verificar cambios cada 3 segundos (sincronización en tiempo real)
+    const pollInterval = setInterval(loadImages, 3000);
 
     return () => clearInterval(pollInterval);
   }, []);
@@ -29,15 +28,18 @@ export default function AdminGalleryPage() {
   const loadImages = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/gallery');
+      const apiUrl = `http://${window.location.hostname}:3000/api/gallery?t=${Date.now()}`;
+      console.log('📥 GET desde:', apiUrl);
+      const response = await fetch(apiUrl);
       if (!response.ok) throw new Error('Error fetching gallery');
       
       const data = await response.json();
+      console.log('✅ Galería recibida:', data.images.length, 'imágenes');
       if (data.images && Array.isArray(data.images)) {
         setImages(data.images);
       }
     } catch (err) {
-      console.error('Error loading images:', err);
+      console.error('❌ Error loading images:', err);
       if (loading) {
         toast({
           title: 'Error',
@@ -51,7 +53,14 @@ export default function AdminGalleryPage() {
   };
 
   const handleAddImage = async (imageUrl) => {
-    if (!imageUrl) return;
+    if (!imageUrl) {
+      toast({
+        title: 'Error',
+        description: 'Por favor ingresa una URL',
+        variant: 'destructive'
+      });
+      return;
+    }
 
     const newImage = {
       id: Date.now().toString(),
@@ -64,12 +73,17 @@ export default function AdminGalleryPage() {
     const updatedImages = [...images, newImage];
     
     try {
-      const response = await fetch('/api/gallery', {
+      const apiUrl = `http://${window.location.hostname}:3000/api/gallery?t=${Date.now()}`;
+      console.log('📤 Enviando POST a:', apiUrl);
+      console.log('📦 Datos:', JSON.stringify({ images: updatedImages }, null, 2).substring(0, 200));
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ images: updatedImages })
       });
 
+      console.log('📥 Respuesta:', response.status, response.statusText);
       if (!response.ok) throw new Error('Error saving image');
       
       setImages(updatedImages);
@@ -77,17 +91,16 @@ export default function AdminGalleryPage() {
         title: 'Éxito',
         description: '✅ Imagen agregada. Se ve en todos tus dispositivos al instante.'
       });
+      setEditingImageTitle('');
+      setImageSize('normal');
     } catch (error) {
-      console.error('Error saving image:', error);
+      console.error('❌ Error saving image:', error);
       toast({
         title: 'Error',
         description: 'Error al guardar la imagen',
         variant: 'destructive'
       });
     }
-
-    setEditingImageTitle('');
-    setImageSize('normal');
   };
 
   const handleDeleteImage = async (imageId) => {
@@ -198,12 +211,27 @@ export default function AdminGalleryPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-200 mb-2">Selecciona una Imagen</label>
-            <ImageGallerySelector
-              currentImageUrl=""
-              onSelect={handleAddImage}
+            <label className="block text-sm font-medium text-slate-200 mb-2">URL de la Imagen</label>
+            <input
+              type="text"
+              placeholder="https://ejemplo.com/imagen.jpg"
+              id="imageUrlInput"
+              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
             />
           </div>
+
+          <button
+            onClick={() => {
+              const url = document.getElementById('imageUrlInput').value;
+              if (url) {
+                handleAddImage(url);
+                document.getElementById('imageUrlInput').value = '';
+              }
+            }}
+            className="w-full px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition"
+          >
+            ➕ Agregar Imagen
+          </button>
         </div>
       </div>
 
@@ -286,10 +314,13 @@ export default function AdminGalleryPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-200 mb-2">Nueva Imagen</label>
-                <ImageGallerySelector
-                  currentImageUrl={selectedImage.image}
-                  onSelect={(newUrl) => setSelectedImage({ ...selectedImage, image: newUrl })}
+                <label className="block text-sm font-medium text-slate-200 mb-2">URL de la Imagen</label>
+                <input
+                  type="text"
+                  value={selectedImage.image}
+                  onChange={(e) => setSelectedImage({ ...selectedImage, image: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                  placeholder="https://ejemplo.com/imagen.jpg"
                 />
               </div>
 
@@ -344,13 +375,13 @@ export default function AdminGalleryPage() {
                   }}
                   className="flex-1 px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition"
                 >
-                  ✅ Guardar Cambios
+                  ✅ Actualizar Producto
                 </button>
                 <button
                   onClick={() => setSelectedImage(null)}
                   className="flex-1 px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg transition"
                 >
-                  Cancelar
+                  ❌ Cancelar
                 </button>
               </div>
             </div>

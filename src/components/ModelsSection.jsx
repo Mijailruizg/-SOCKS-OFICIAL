@@ -40,7 +40,8 @@ const ModelsSection = () => {
   useEffect(() => {
     const loadImages = async () => {
       try {
-        const response = await fetch('/api/gallery');
+        const apiUrl = `http://${window.location.hostname}:3000/api/gallery?t=${Date.now()}`;
+        const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Error fetching gallery');
         
         const data = await response.json();
@@ -63,8 +64,8 @@ const ModelsSection = () => {
     // Cargar inicial
     loadImages();
 
-    // Verificar cambios cada 2 segundos
-    const pollInterval = setInterval(loadImages, 2000);
+    // Verificar cambios cada 3 segundos
+    const pollInterval = setInterval(loadImages, 3000);
 
     return () => clearInterval(pollInterval);
   }, []);
