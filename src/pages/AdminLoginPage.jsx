@@ -96,12 +96,7 @@ export default function AdminLoginPage() {
             {loading ? 'Cargando...' : 'Ingresar'}
           </button>
 
-          {/* Test Credentials Info */}
-          <div className="mt-6 p-4 bg-slate-700/50 rounded border border-slate-600 text-xs text-slate-300">
-            <p className="font-semibold mb-2">Credenciales de prueba:</p>
-            <p>📧 admin@socks.com</p>
-            <p>🔑 admin123</p>
-          </div>
+          {/* Nota: credenciales de prueba eliminadas para seguridad */}
         </form>
 
         {/* Back to Home */}

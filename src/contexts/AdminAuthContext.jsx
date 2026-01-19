@@ -19,10 +19,10 @@ export const AdminAuthProvider = ({ children }) => {
 
   const adminLogin = async (email, password) => {
     try {
-      // In production, validate against backend
-      // For now, use hardcoded admin credentials stored in env or a simple check
-      const ADMIN_EMAIL = 'admin@socks.com';
-      const ADMIN_PASSWORD = 'admin123'; // Should be in environment variables
+      // In production, validate against backend.
+      // Read admin creds from environment variables when available.
+      const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'admin@socks.com';
+      const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123'; // Override via Vite env vars
       
       if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
         const adminUser = {

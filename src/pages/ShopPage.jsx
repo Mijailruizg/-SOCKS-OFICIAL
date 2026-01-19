@@ -7,12 +7,13 @@ import ProductCard from '@/components/ProductCard';
 import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { products as realProducts } from '@/data/products';
+import { api } from '@/lib/api';
 
 const ShopPage = () => {
   const [searchParams] = useSearchParams();
-  const [products, setProducts] = useState(realProducts);
-  const [loading, setLoading] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [priceRange, setPriceRange] = useState([0, 50]);
   const [sortBy, setSortBy] = useState('newest');
@@ -21,8 +22,42 @@ const ShopPage = () => {
 
   const categories = ['all', 'running', 'hybrid', 'winter', 'golf'];
 
+  // Load products from API once on mount
   useEffect(() => {
-    // Detect URL category param. If 'new-arrivals', enable new-arrivals filter.
+    let mounted = true;
+    const load = async () => {
+      setLoading(true);
+      const data = await api.getProducts();
+      if (!mounted) return;
+      setAllProducts(data);
+      setLoading(false);
+    };
+    load();
+    return () => { mounted = false; };
+  }, []);
+
+  // Restore filters + scroll position from sessionStorage if available
+  useEffect(() => {
+    const stored = sessionStorage.getItem('shop_state');
+    if (stored) {
+      try {
+        const s = JSON.parse(stored);
+        if (s.selectedCategory) setSelectedCategory(s.selectedCategory);
+        if (s.priceRange) setPriceRange(s.priceRange);
+        if (s.sortBy) setSortBy(s.sortBy);
+        if (typeof s.showNewArrivals === 'boolean') setShowNewArrivals(s.showNewArrivals);
+        // Delay scrolling until after render
+        setTimeout(() => {
+          if (s.scrollY) window.scrollTo(0, s.scrollY);
+        }, 50);
+      } catch (err) {
+        console.error('Error parsing shop_state', err);
+      }
+    }
+  }, []);
+
+  // Whenever filters or allProducts change, compute filtered products
+  useEffect(() => {
     const paramCategory = searchParams.get('category');
     if (paramCategory === 'new-arrivals') {
       setShowNewArrivals(true);
@@ -35,50 +70,86 @@ const ShopPage = () => {
       setShowNewArrivals(false);
     }
 
+    // Compute filtered products
+    const filterProducts = () => {
+      setLoading(true);
+      let filtered = [...allProducts];
+
+      // Category filter
+      if (selectedCategory !== 'all') {
+        filtered = filtered.filter(p => p.category === selectedCategory);
+      }
+
+      // Price filter
+      filtered = filtered.filter(p => {
+        const price = p.sale_price || p.price;
+        return price >= priceRange[0] && price <= priceRange[1];
+      });
+
+      // Search filter
+      const search = searchParams.get('search');
+      if (search) {
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(search.toLowerCase()) ||
+          p.description.toLowerCase().includes(search.toLowerCase())
+        );
+      }
+
+      // If showing new arrivals (via ?category=new-arrivals), filter only new products
+      if (showNewArrivals) {
+        filtered = filtered.filter(p => p.is_new);
+      }
+
+      // Sort
+      if (sortBy === 'price-low') {
+        filtered.sort((a, b) => (a.sale_price || a.price) - (b.sale_price || b.price));
+      } else if (sortBy === 'price-high') {
+        filtered.sort((a, b) => (b.sale_price || b.price) - (a.sale_price || a.price));
+      } else if (sortBy === 'rating') {
+        filtered.sort((a, b) => b.rating - a.rating);
+      }
+
+      setProducts(filtered);
+      setLoading(false);
+
+      // Persist current filters and (latest) scroll position to sessionStorage
+      try {
+        const state = {
+          selectedCategory,
+          priceRange,
+          sortBy,
+          showNewArrivals,
+          scrollY: window?.scrollY || 0,
+        };
+        sessionStorage.setItem('shop_state', JSON.stringify(state));
+      } catch (err) {
+        console.error('Could not save shop_state', err);
+      }
+    };
+
     filterProducts();
-  }, [selectedCategory, priceRange, sortBy, searchParams, showNewArrivals]);
+  }, [selectedCategory, priceRange, sortBy, searchParams, showNewArrivals, allProducts]);
 
-  const filterProducts = () => {
-    setLoading(true);
-    let filtered = [...realProducts];
+  // Save scroll position on scroll (debounced)
+  useEffect(() => {
+    let timeout = null;
+    const onScroll = () => {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        try {
+          const stored = JSON.parse(sessionStorage.getItem('shop_state') || '{}');
+          stored.scrollY = window.scrollY || 0;
+          sessionStorage.setItem('shop_state', JSON.stringify(stored));
+        } catch (err) {}
+      }, 150);
+    };
 
-    // Category filter
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(p => p.category === selectedCategory);
-    }
-
-    // Price filter
-    filtered = filtered.filter(p => {
-      const price = p.sale_price || p.price;
-      return price >= priceRange[0] && price <= priceRange[1];
-    });
-
-    // Search filter
-    const search = searchParams.get('search');
-    if (search) {
-      filtered = filtered.filter(p =>
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.description.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    // If showing new arrivals (via ?category=new-arrivals), filter only new products
-    if (showNewArrivals) {
-      filtered = filtered.filter(p => p.is_new);
-    }
-
-    // Sort
-    if (sortBy === 'price-low') {
-      filtered.sort((a, b) => (a.sale_price || a.price) - (b.sale_price || b.price));
-    } else if (sortBy === 'price-high') {
-      filtered.sort((a, b) => (b.sale_price || b.price) - (a.sale_price || a.price));
-    } else if (sortBy === 'rating') {
-      filtered.sort((a, b) => b.rating - a.rating);
-    }
-
-    setProducts(filtered);
-    setLoading(false);
-  };
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (timeout) clearTimeout(timeout);
+    };
+  }, []);
 
   return (
     <>
@@ -165,7 +236,7 @@ const ShopPage = () => {
             <div className="flex-1">
               {/* Mobile Filter Toggle */}
               <div className="lg:hidden mb-4">
-                  <Button
+                <Button
                   onClick={() => setShowFilters(!showFilters)}
                   variant="outline"
                   className="w-full"
@@ -180,7 +251,7 @@ const ShopPage = () => {
                   <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
                 </div>
               ) : products.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {products.map((product, index) => (
                     <motion.div
                       key={product.id}

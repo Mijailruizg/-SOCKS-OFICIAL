@@ -42,6 +42,17 @@ function LayoutWrapper({ children }) {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
 
+  // Restore scroll position on Home when returning from a detail page
+  React.useEffect(() => {
+    try {
+      const s = JSON.parse(sessionStorage.getItem('shop_state') || '{}');
+      if (location.pathname === '/' && s && typeof s.scrollY === 'number') {
+        // Small delay to allow layout to render
+        setTimeout(() => window.scrollTo(0, s.scrollY), 50);
+      }
+    } catch (err) {}
+  }, [location.pathname]);
+
   return (
     <div className="flex flex-col min-h-screen">
       {!isAdminRoute && (

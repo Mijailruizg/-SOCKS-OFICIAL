@@ -61,7 +61,18 @@ const HeroSection = () => {
             transition={{ delay: 0.7 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            <Link to="/shop">
+            <Link
+              to="/shop"
+              onClick={() => {
+                try {
+                  const s = JSON.parse(sessionStorage.getItem('shop_state') || '{}');
+                  s.scrollY = 0;
+                  sessionStorage.setItem('shop_state', JSON.stringify(s));
+                } catch (err) {
+                  sessionStorage.setItem('shop_state', JSON.stringify({ scrollY: 0 }));
+                }
+              }}
+            >
               <Button
                 size="lg"
                 className="w-full sm:w-auto bg-white text-black hover:bg-gray-200 font-bold px-8 py-6 rounded-full text-lg transition-all hover:scale-105"

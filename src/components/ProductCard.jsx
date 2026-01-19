@@ -26,7 +26,18 @@ const ProductCard = ({ product }) => {
   }
 
   return (
-    <Link to={`/product/${product.id}`} className="block h-full">
+    <Link
+      to={`/product/${product.id}`}
+      className="block h-full"
+      onClick={() => {
+        try {
+          const stored = JSON.parse(sessionStorage.getItem('shop_state') || '{}');
+          stored.scrollY = window.scrollY || 0;
+          stored.lastClickedProductId = product.id;
+          sessionStorage.setItem('shop_state', JSON.stringify(stored));
+        } catch (err) {}
+      }}
+    >
       <motion.div
         whileHover={{ y: -8 }}
         className="group relative h-full bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 flex flex-col"

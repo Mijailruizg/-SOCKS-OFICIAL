@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
 const ModelsSection = () => {
@@ -37,20 +37,6 @@ const ModelsSection = () => {
     }
   ]);
 
-  useEffect(() => {
-    const storedModels = localStorage.getItem('model_images');
-    if (storedModels) {
-      try {
-        const parsed = JSON.parse(storedModels);
-        if (parsed && parsed.length > 0) {
-          setModels(parsed);
-        }
-      } catch (e) {
-        console.error('Error parsing models:', e);
-      }
-    }
-  }, []);
-
   return (
     <section className="py-16 px-4 md:px-8 bg-white">
       <div className="max-w-7xl mx-auto">
@@ -63,7 +49,7 @@ const ModelsSection = () => {
         </div>
 
         {/* Grid de productos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {models.map((model) => (
             <div
               key={model.id}
@@ -83,14 +69,6 @@ const ModelsSection = () => {
 
               {/* Info del producto */}
               <div>
-                <h2 className="text-lg font-bold text-gray-900 group-hover:text-gray-600 transition">
-                  {model.name}
-                </h2>
-
-                {/* Precio */}
-                <p className="text-xl font-bold text-gray-900 mt-3">
-                  
-                </p>
               </div>
             </div>
           ))}

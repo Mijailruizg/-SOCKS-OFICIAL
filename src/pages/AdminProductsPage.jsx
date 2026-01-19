@@ -184,22 +184,25 @@ export default function AdminProductsPage() {
     }
 
     try {
-      if (editingSection) {
-        await api.updateContentSection(editingSection.id, sectionFormData);
-        toast({
-          title: 'Éxito',
-          description: 'Sección actualizada correctamente'
-        });
-      } else {
-        await api.addContentSection({
-          ...sectionFormData,
-          section_type: 'product-section'
-        });
-        toast({
-          title: 'Éxito',
-          description: 'Sección agregada correctamente'
-        });
-      }
+      // Guardar en localStorage con todos los datos
+      const updatedSection = {
+        ...editingSection,
+        title: sectionFormData.title,
+        description: sectionFormData.description,
+        updated_at: new Date().toISOString()
+      };
+      
+      const updatedSections = sections.map(s =>
+        s.id === editingSection.id ? updatedSection : s
+      );
+      
+      setSections(updatedSections);
+      localStorage.setItem('content_sections', JSON.stringify(updatedSections));
+      
+      toast({
+        title: 'Éxito',
+        description: 'Sección actualizada correctamente'
+      });
 
       setSectionFormData({
         id: '',
@@ -209,7 +212,6 @@ export default function AdminProductsPage() {
         category: ''
       });
       setEditingSection(null);
-      await loadData();
     } catch (err) {
       toast({
         title: 'Error',
@@ -370,27 +372,15 @@ export default function AdminProductsPage() {
           <h3 className="text-lg font-bold text-yellow-400 mb-4">✏️ Editando Sección: {editingSection.title}</h3>
           
           <form onSubmit={handleSectionSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-slate-200 mb-2">Título</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={sectionFormData.title}
-                  onChange={handleSectionInputChange}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-200 mb-2">Categoría</label>
-                <input
-                  type="text"
-                  name="category"
-                  value={sectionFormData.category}
-                  onChange={handleSectionInputChange}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-200 mb-2">Título</label>
+              <input
+                type="text"
+                name="title"
+                value={sectionFormData.title}
+                onChange={handleSectionInputChange}
+                className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+              />
             </div>
 
             <div>
@@ -401,14 +391,6 @@ export default function AdminProductsPage() {
                 onChange={handleSectionInputChange}
                 rows="2"
                 className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-200 mb-2">Imagen de Fondo</label>
-              <ImageGallerySelector
-                currentImageUrl={sectionFormData.image_url}
-                onSelect={(imagePath) => setSectionFormData(prev => ({ ...prev, image_url: imagePath }))}
               />
             </div>
 
@@ -602,14 +584,14 @@ export default function AdminProductsPage() {
               {/* Section Header */}
               <div className="bg-gradient-to-r from-slate-700 to-slate-800 p-6 flex items-center justify-between">
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-white">{defaultSection.title}</h2>
+                  <h2 className="text-2xl font-bold text-white">{sectionData?.title || defaultSection.title}</h2>
                   {sectionData?.description && (
                     <p className="text-slate-400 text-sm mt-1">{sectionData.description}</p>
                   )}
                   {sectionData?.image_url && (
                     <img
                       src={sectionData.image_url}
-                      alt={defaultSection.title}
+                      alt={sectionData?.title || defaultSection.title}
                       className="mt-3 h-32 object-cover rounded"
                       onError={(e) => {
                         e.target.style.display = 'none';
@@ -630,7 +612,7 @@ export default function AdminProductsPage() {
                         rating: '5',
                         sizes: []
                       });
-                      setAddingToSection(defaultSection);
+                      setAddingToSection(sectionData || defaultSection);
                       setIsAddingProduct(true);
                       window.scrollTo(0, 0);
                     }}

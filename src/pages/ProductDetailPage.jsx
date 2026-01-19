@@ -8,7 +8,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/components/ui/use-toast';
 import ProductCard from '@/components/ProductCard';
 import { formatPrice } from '@/lib/utils';
-import { products } from '@/data/products';
+import { api } from '@/lib/api';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -19,20 +19,20 @@ const ProductDetailPage = () => {
   const { addToCart } = useCart();
   const { toast } = useToast();
 
-  // Load product from products data
+  // Load product via API (respects admin edits in localStorage)
   useEffect(() => {
-    const foundProduct = products.find(p => p.id === id);
-    if (foundProduct) {
-      setProduct(foundProduct);
-      if (foundProduct.sizes && foundProduct.sizes.length > 0) {
-        setSelectedSize(foundProduct.sizes[0]);
+    let mounted = true;
+    const load = async () => {
+      const p = await api.getProductById(id);
+      if (mounted && p) {
+        setProduct(p);
+        if (p.sizes && p.sizes.length > 0) setSelectedSize(p.sizes[0]);
+        if (p.colors && p.colors.length > 0) setSelectedColor(p.colors[0]);
+        window.scrollTo(0, 0);
       }
-      if (foundProduct.colors && foundProduct.colors.length > 0) {
-        setSelectedColor(foundProduct.colors[0]);
-      }
-    }
-    // Scroll to top when product changes
-    window.scrollTo(0, 0);
+    };
+    load();
+    return () => { mounted = false; };
   }, [id]);
 
   const relatedProducts = [
@@ -128,7 +128,7 @@ const ProductDetailPage = () => {
           </nav>
 
           {/* Product Details */}
-          <div className="grid md:grid-cols-2 gap-12 mb-16">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-6 mb-12">
             {/* Image Gallery */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}

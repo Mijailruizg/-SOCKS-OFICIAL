@@ -49,7 +49,19 @@ const Header = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0">
+          <Link
+            to="/"
+            className="flex-shrink-0"
+            onClick={(e) => {
+              // If user presses Ctrl+Shift and clicks the title, open admin login instead
+              if (e.ctrlKey && e.shiftKey) {
+                e.preventDefault();
+                // navigate programmatically to admin login
+                // use window.location to ensure full navigation
+                window.location.href = '/admin/login';
+              }
+            }}
+          >
             <span className="text-2xl font-black text-white italic tracking-tighter">
               SOCKS OFICIAL
             </span>

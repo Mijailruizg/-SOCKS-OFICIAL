@@ -40,6 +40,12 @@ export const api = {
 
   getProductById: async (id) => {
     await delay(300);
+    // Prefer admin-edited products stored in localStorage
+    const adminProducts = JSON.parse(localStorage.getItem('admin_products') || '[]');
+    const edited = adminProducts.find(p => p.id === id);
+    if (edited) return edited;
+
+    // Fallback to original products
     return products.find(p => p.id === id);
   },
 
@@ -276,8 +282,18 @@ export const api = {
   // Content Management Functions
   getContentSections: async () => {
     await delay(300);
+    const defaultSections = [
+      { id: 'socks-oficial', title: 'SOCKS OFICIAL', category: 'hybrid', description: 'Nuestra colección oficial de calcetines' },
+      { id: 'new-arrivals', title: 'New Arrivals', category: 'new-arrivals', description: 'Los últimos lanzamientos' },
+      { id: 'winter-merino', title: 'Sub 0 Winter Merino', category: 'winter', description: 'Calcetines de lana merino para invierno' },
+      { id: 'pro-golf', title: 'Pro Golf Socks', category: 'golf', description: 'Calcetines especializados para golf' }
+    ];
+    
     const sections = JSON.parse(localStorage.getItem('content_sections') || '[]');
-    return sections.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    
+    // Si hay secciones guardadas, retornarlas; si no, retornar las por defecto
+    const result = sections.length > 0 ? sections : defaultSections;
+    return result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   },
 
   addContentSection: async (sectionData) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, Youtube, Mail, MapPin, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import AdminQuickLink from '@/components/AdminQuickLink';
 
 const Footer = () => {
   return (
@@ -90,6 +91,10 @@ const Footer = () => {
             <Link to="/terms" className="hover:underline">Terms</Link>
           </div>
         </div>
+      </div>
+      {/* Admin quick link: small camouflaged dot placed over footer background */}
+      <div className="relative max-w-7xl mx-auto px-6">
+        <AdminQuickLink />
       </div>
     </footer>
   );

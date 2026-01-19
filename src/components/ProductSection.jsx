@@ -8,6 +8,16 @@ import { api } from '@/lib/api';
 const ProductSection = ({ title, category, className = "" }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sectionTitle, setSectionTitle] = useState(title);
+
+  useEffect(() => {
+    // Cargar título dinámicamente desde localStorage
+    const sections = JSON.parse(localStorage.getItem('content_sections') || '[]');
+    const section = sections.find(s => s.category === category);
+    if (section && section.title) {
+      setSectionTitle(section.title);
+    }
+  }, [category]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,7 +41,7 @@ const ProductSection = ({ title, category, className = "" }) => {
         <div className="flex items-end justify-between mb-10">
           <div>
               <h2 className="text-3xl md:text-4xl font-black text-black uppercase tracking-tight">
-                {title}
+                {sectionTitle}
               </h2>
               <div className="h-1 w-20 bg-black mt-2 rounded-full"></div>
           </div>
@@ -45,13 +55,13 @@ const ProductSection = ({ title, category, className = "" }) => {
         </div>
 
         {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[1,2,3,4].map(i => (
                     <div key={i} className="h-96 bg-gray-100 rounded-2xl animate-pulse"></div>
                 ))}
             </div>
         ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((product, index) => (
                 <motion.div
                   key={product.id}
