@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { syncManager } from '@/lib/syncManager';
 
 const ModelsSection = () => {
   const [models, setModels] = useState([
     { 
       id: '1', 
-      url: 'public/galeria/2.jpeg',
+      url: '/galeria/producto 1/2.jpeg',
       name: 'SOCKS OFICIAL 1',
       rating: 4.8,
       reviews: 256,
@@ -13,7 +14,7 @@ const ModelsSection = () => {
     },
     { 
       id: '2', 
-      url: 'public/galeria/4.jpeg',
+      url: '/galeria/producto 1/4.jpeg',
       name: 'SOCKS OFICIAL 2',
       rating: 4.7,
       reviews: 198,
@@ -21,7 +22,7 @@ const ModelsSection = () => {
     },
     { 
       id: '3', 
-      url: 'public/galeria/5.jpeg',
+      url: '/galeria/producto 1/5.jpeg',
       name: 'SOCKS OFICIAL 3',
       rating: 4.6,
       reviews: 142,
@@ -29,13 +30,32 @@ const ModelsSection = () => {
     },
     { 
       id: '4', 
-      url: 'public/galeria/3.jpeg',
+      url: '/galeria/producto 1/3.jpeg',
       name: 'SOCKS OFICIAL 4',
       rating: 4.9,
       reviews: 187,
       price: 30.00
     }
   ]);
+
+  useEffect(() => {
+    // Escuchar cambios de galería desde el panel admin
+    const unsubscribe = syncManager.onSync('gallery_images', (updatedImages) => {
+      if (updatedImages.length > 0) {
+        const updatedModels = updatedImages.map((img, index) => ({
+          id: (index + 1).toString(),
+          url: img.url || img,
+          name: `SOCKS OFICIAL ${index + 1}`,
+          rating: 4.5 + Math.random() * 0.4,
+          reviews: Math.floor(100 + Math.random() * 200),
+          price: 30.00
+        }));
+        setModels(updatedModels);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <section className="py-16 px-4 md:px-8 bg-white">
