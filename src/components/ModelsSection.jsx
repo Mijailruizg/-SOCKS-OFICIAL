@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { syncManager } from '@/lib/syncManager';
 
 const ModelsSection = () => {
   const [models, setModels] = useState([
@@ -39,22 +38,37 @@ const ModelsSection = () => {
   ]);
 
   useEffect(() => {
-    // Escuchar cambios de galería desde el panel admin
-    const unsubscribe = syncManager.onSync('gallery_images', (updatedImages) => {
-      if (updatedImages.length > 0) {
-        const updatedModels = updatedImages.map((img, index) => ({
-          id: (index + 1).toString(),
-          url: img.url || img,
-          name: `SOCKS OFICIAL ${index + 1}`,
-          rating: 4.5 + Math.random() * 0.4,
-          reviews: Math.floor(100 + Math.random() * 200),
-          price: 30.00
-        }));
-        setModels(updatedModels);
-      }
-    });
+    try {
+      // Escuchar cambios de galería desde el panel admin usando storage event
+      const handleStorageChange = (event) => {
+        if (event.key === 'gallery_images' && event.newValue) {
+          try {
+            const updatedImages = JSON.parse(event.newValue);
+            if (updatedImages.length > 0) {
+              const updatedModels = updatedImages.map((img, index) => ({
+                id: (index + 1).toString(),
+                url: img.url || img,
+                name: `SOCKS OFICIAL ${index + 1}`,
+                rating: 4.5 + Math.random() * 0.4,
+                reviews: Math.floor(100 + Math.random() * 200),
+                price: 30.00
+              }));
+              setModels(updatedModels);
+            }
+          } catch (error) {
+            console.error('Error parsing gallery images:', error);
+          }
+        }
+      };
 
-    return unsubscribe;
+      window.addEventListener('storage', handleStorageChange);
+
+      return () => {
+        window.removeEventListener('storage', handleStorageChange);
+      };
+    } catch (error) {
+      console.error('Error in ModelsSection useEffect:', error);
+    }
   }, []);
 
   return (
