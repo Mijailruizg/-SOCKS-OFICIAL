@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import HeroSection from '@/components/HeroSection';
 import ProductSection from '@/components/ProductSection';
 import CauseSection from '@/components/CauseSection';
-import ModelGallerySection from '@/components/ModelGallerySection';
+import ModelsSection from '@/components/ModelsSection';
 
 const HomePage = () => {
   return (
@@ -17,7 +17,7 @@ const HomePage = () => {
         <HeroSection />
 
         {/* Galería de modelos en lugar de New Arrivals */}
-        <ModelGallerySection />
+        <ModelsSection />
 
         <ProductSection 
           title="SOCKS OFICIAL" 

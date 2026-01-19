@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Heart, TrendingUp, Users, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +7,29 @@ import { formatPrice } from '@/lib/utils';
 
 const CauseSection = () => {
   const { toast } = useToast();
+  const [impactoData, setImpactoData] = useState({
+    heading: 'CORRE POR',
+    subheading: 'EL BIEN',
+    description: 'Creemos que cada paso cuenta. Por eso el 5% de cada compra se destina directamente a programas deportivos juveniles en comunidades necesitadas.',
+    donated: '50K+',
+    donatedLabel: 'PARES DONADOS',
+    raised: 'S/ 120,000.00',
+    raisedLabel: 'RECAUDADO',
+    communities: '20+',
+    communitiesLabel: 'COMUNIDADES',
+    image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c'
+  });
+
+  useEffect(() => {
+    const storedData = localStorage.getItem('impacto_data');
+    if (storedData) {
+      try {
+        setImpactoData(JSON.parse(storedData));
+      } catch (err) {
+        console.error('Error loading impacto data:', err);
+      }
+    }
+  }, []);
 
   const handleLearnMore = () => {
     toast({
@@ -30,27 +53,27 @@ const CauseSection = () => {
             </div>
             
             <h2 className="text-4xl md:text-6xl font-black mb-6 leading-none text-black">
-              CORRE POR <br />
-              <span className="text-gray-500">EL BIEN</span>
+              {impactoData.heading} <br />
+              <span className="text-gray-500">{impactoData.subheading}</span>
             </h2>
             
             <p className="text-xl mb-8 text-gray-600 font-light leading-relaxed">
-              Creemos que cada paso cuenta. Por eso el 5% de cada compra se destina directamente a programas deportivos juveniles en comunidades necesitadas.
+              {impactoData.description}
             </p>
 
             {/* Impact Stats */}
             <div className="grid grid-cols-3 gap-8 mb-10 border-t border-gray-200 pt-8">
               <div>
-                <div className="text-4xl font-black text-black mb-1">50K+</div>
-                <div className="text-xs font-bold text-gray-500 tracking-wider">PARES DONADOS</div>
+                <div className="text-4xl font-black text-black mb-1">{impactoData.donated}</div>
+                <div className="text-xs font-bold text-gray-500 tracking-wider">{impactoData.donatedLabel}</div>
               </div>
               <div>
-                <div className="text-4xl font-black text-black mb-1">{formatPrice(120000)}</div>
-                <div className="text-xs font-bold text-gray-500 tracking-wider">RECAUDADO</div>
+                <div className="text-4xl font-black text-black mb-1">{impactoData.raised}</div>
+                <div className="text-xs font-bold text-gray-500 tracking-wider">{impactoData.raisedLabel}</div>
               </div>
               <div>
-                <div className="text-4xl font-black text-black mb-1">20+</div>
-                <div className="text-xs font-bold text-gray-500 tracking-wider">COMUNIDADES</div>
+                <div className="text-4xl font-black text-black mb-1">{impactoData.communities}</div>
+                <div className="text-xs font-bold text-gray-500 tracking-wider">{impactoData.communitiesLabel}</div>
               </div>
             </div>
 
@@ -72,9 +95,12 @@ const CauseSection = () => {
           >
             <div className="relative rounded-3xl overflow-hidden shadow-2xl transition-transform duration-500 grayscale">
                 <img
-                src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c"
+                src={impactoData.image}
                 alt="Community Impact"
                 className="w-full h-[600px] object-cover"
+                onError={(e) => {
+                  e.target.src = 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c';
+                }}
                 />
                 <div className="absolute bottom-8 left-8 z-20 max-w-xs">
                     <p className="text-white font-bold text-lg italic drop-shadow-md">"Sport has the power to change the world."</p>

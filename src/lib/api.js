@@ -18,7 +18,24 @@ export const api = {
   // Products
   getProducts: async () => {
     await delay(500); // Simulate network latency
-    return products;
+    
+    // Get admin-added/edited products from localStorage
+    const adminProducts = JSON.parse(localStorage.getItem('admin_products') || '[]');
+    const editedProductIds = JSON.parse(localStorage.getItem('edited_product_ids') || '[]');
+    
+    // Combine original products with edits
+    let allProducts = [...products];
+    
+    // Reemplazar productos editados
+    allProducts = allProducts.map(product => {
+      const editedProduct = adminProducts.find(ap => ap.id === product.id);
+      return editedProduct || product;
+    });
+    
+    // Agregar productos completamente nuevos (que no existan en originales)
+    const newProducts = adminProducts.filter(ap => !products.find(p => p.id === ap.id));
+    
+    return [...allProducts, ...newProducts];
   },
 
   getProductById: async (id) => {
@@ -134,6 +151,194 @@ export const api = {
   getOrders: async (userId) => {
     await delay(500);
     const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+    
+    // If no userId, return all orders (for admin)
+    if (!userId) {
+      return orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+    
     return orders.filter(o => o.user_id === userId).sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+  },
+
+  // Admin Functions
+  addProduct: async (productData) => {
+    try {
+      await delay(300);
+      
+      // Get current products from localStorage
+      const adminProducts = JSON.parse(localStorage.getItem('admin_products') || '[]');
+      
+      const newProduct = {
+        id: productData.id || generateId(),
+        ...productData,
+        sizes: productData.sizes || [],
+        created_at: new Date().toISOString()
+      };
+      
+      adminProducts.push(newProduct);
+      localStorage.setItem('admin_products', JSON.stringify(adminProducts));
+      
+      return newProduct;
+    } catch (error) {
+      console.error('Error adding product:', error);
+      throw error;
+    }
+  },
+
+  updateProduct: async (productId, productData) => {
+    try {
+      await delay(300);
+      
+      let adminProducts = JSON.parse(localStorage.getItem('admin_products') || '[]');
+      
+      // Buscar si el producto ya está en la lista de administración
+      let index = adminProducts.findIndex(p => p.id === productId);
+      
+      if (index !== -1) {
+        // Actualizar producto que ya existe en admin_products
+        adminProducts[index] = {
+          ...adminProducts[index],
+          ...productData,
+          sizes: productData.sizes || adminProducts[index].sizes || [],
+          updated_at: new Date().toISOString()
+        };
+      } else {
+        // Es un producto original, agregarlo a admin_products como versión editada
+        const originalProduct = products.find(p => p.id === productId);
+        if (originalProduct) {
+          adminProducts.push({
+            ...originalProduct,
+            ...productData,
+            sizes: productData.sizes || [],
+            updated_at: new Date().toISOString()
+          });
+        } else {
+          throw new Error('Product not found');
+        }
+      }
+      
+      localStorage.setItem('admin_products', JSON.stringify(adminProducts));
+      
+      // Guardar el ID como editado (para referencias futuras)
+      let editedIds = JSON.parse(localStorage.getItem('edited_product_ids') || '[]');
+      if (!editedIds.includes(productId)) {
+        editedIds.push(productId);
+        localStorage.setItem('edited_product_ids', JSON.stringify(editedIds));
+      }
+      
+      return adminProducts[index !== -1 ? index : adminProducts.length - 1];
+    } catch (error) {
+      console.error('Error updating product:', error);
+      throw error;
+    }
+  },
+
+  deleteProduct: async (productId) => {
+    try {
+      await delay(300);
+      
+      let adminProducts = JSON.parse(localStorage.getItem('admin_products') || '[]');
+      adminProducts = adminProducts.filter(p => p.id !== productId);
+      localStorage.setItem('admin_products', JSON.stringify(adminProducts));
+      
+      return true;
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
+  },
+
+  updateOrderStatus: async (orderId, newStatus) => {
+    try {
+      await delay(300);
+      
+      const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+      const index = orders.findIndex(o => o.id === orderId);
+      
+      if (index === -1) {
+        throw new Error('Order not found');
+      }
+      
+      orders[index] = {
+        ...orders[index],
+        status: newStatus,
+        updated_at: new Date().toISOString()
+      };
+      
+      localStorage.setItem('orders', JSON.stringify(orders));
+      return orders[index];
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      throw error;
+    }
+  },
+
+  // Content Management Functions
+  getContentSections: async () => {
+    await delay(300);
+    const sections = JSON.parse(localStorage.getItem('content_sections') || '[]');
+    return sections.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  },
+
+  addContentSection: async (sectionData) => {
+    try {
+      await delay(300);
+      
+      const sections = JSON.parse(localStorage.getItem('content_sections') || '[]');
+      
+      const newSection = {
+        ...sectionData,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      
+      sections.push(newSection);
+      localStorage.setItem('content_sections', JSON.stringify(sections));
+      
+      return newSection;
+    } catch (error) {
+      console.error('Error adding content section:', error);
+      throw error;
+    }
+  },
+
+  updateContentSection: async (sectionId, sectionData) => {
+    try {
+      await delay(300);
+      
+      let sections = JSON.parse(localStorage.getItem('content_sections') || '[]');
+      const index = sections.findIndex(s => s.id === sectionId);
+      
+      if (index === -1) {
+        throw new Error('Section not found');
+      }
+      
+      sections[index] = {
+        ...sections[index],
+        ...sectionData,
+        updated_at: new Date().toISOString()
+      };
+      
+      localStorage.setItem('content_sections', JSON.stringify(sections));
+      return sections[index];
+    } catch (error) {
+      console.error('Error updating content section:', error);
+      throw error;
+    }
+  },
+
+  deleteContentSection: async (sectionId) => {
+    try {
+      await delay(300);
+      
+      let sections = JSON.parse(localStorage.getItem('content_sections') || '[]');
+      sections = sections.filter(s => s.id !== sectionId);
+      localStorage.setItem('content_sections', JSON.stringify(sections));
+      
+      return true;
+    } catch (error) {
+      console.error('Error deleting content section:', error);
+      throw error;
+    }
   }
 };
