@@ -25,7 +25,7 @@ const ProductCard = ({ product }) => {
       setCurrentImageIndex((prev) => 
         prev === product.images.length - 1 ? 0 : prev + 1
       );
-    }, 500); // Cambiar imagen cada 500ms
+    }, 2000); // Cambiar imagen cada 2 segundos
     
     return () => clearInterval(interval);
   }, [isHovering, hasMultipleImages, product.images]);
