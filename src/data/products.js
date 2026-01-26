@@ -72,7 +72,8 @@ export const products = [
     rating: 4.8,
     image_url: '/galeria/product/SO - DS02 WH.jpeg',
     images: [
-      '/galeria/product/SO - DS02 WH.jpeg'
+      '/galeria/product/SO - DS02 WH.jpeg',
+      '/galeria/product/5.jpeg'
     ],
     reviews: 256,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -95,9 +96,10 @@ export const products = [
     price: 30.00,
     sale_price: null,
     rating: 4.7,
-    image_url: '/galeria/product/SO - DS04 BK.jpeg',
+    image_url: '/galeria/product/SO - DS08 BK.jpeg',
     images: [
-      '/galeria/product/SO - DS04 BK.jpeg'
+      '/galeria/product/SO - DS08 BK.jpeg',
+      '/galeria/product/8.jpeg'
     ],
     reviews: 198,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -123,7 +125,8 @@ export const products = [
     rating: 4.6,
     image_url: '/galeria/product/SO - DS03 WH.jpeg',
     images: [
-      '/galeria/product/SO - DS03 WH.jpeg'
+      '/galeria/product/SO - DS03 WH.jpeg',
+      '/galeria/product/7.jpeg'
     ],
     reviews: 142,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -145,9 +148,10 @@ export const products = [
     description: 'Premium quality socks from PRODUCT collection. Designed for comfort and style.',
     price: 30.00,
     sale_price: null,
-    rating: 4.9,
-    image_url: '/galeria/product/SO - DS08 BK.jpeg',
+    rating: 4.9,4 BK.jpeg',
     images: [
+      '/galeria/product/SO - DS04 BK.jpeg',
+      '/galeria/product/6
       '/galeria/product/SO - DS08 BK.jpeg'
     ],
     reviews: 187,
