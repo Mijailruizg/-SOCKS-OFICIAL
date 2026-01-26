@@ -83,6 +83,11 @@ const ShopPage = () => {
       setLoading(true);
       let filtered = [...allProducts];
 
+      // Excluir categorías que no son productos reales
+      filtered = filtered.filter(p => 
+        p.category !== 'new-arrivals' && p.category !== 'customized-socks'
+      );
+
       // Category filter
       if (selectedCategory !== 'all') {
         filtered = filtered.filter(p => p.category === selectedCategory);

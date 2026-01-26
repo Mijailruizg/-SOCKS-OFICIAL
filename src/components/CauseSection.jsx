@@ -19,10 +19,8 @@ const CauseSection = () => {
     heading: 'Our Commitment',
     subheading: 'to Athletes',
     description: 'At SOCKS OFICIAL, our commitment is clear: support athletes who give their best every day. Because when you commit to your sport, we commit to you',
-    donated: '50K+',
+    donated: '1.5K+',
     donatedLabel: 'PARES DONADOS',
-    raised: 'S/ 120,000.00',
-    raisedLabel: 'RECAUDADO',
     communities: '20+',
     communitiesLabel: 'COMUNIDADES',
     image: '/galeria/IMPACTO SOCIAL/imagen1.jpeg'
@@ -70,7 +68,7 @@ const CauseSection = () => {
             viewport={{ once: true }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black text-white text-xs font-bold mb-6">
-                <Heart className="w-3 h-3" /> IMPACTO SOCIAL
+                <Heart className="w-3 h-3" /> ALLIANCE
             </div>
             
             <h2 className="text-4xl md:text-6xl font-black mb-6 leading-none text-black">
