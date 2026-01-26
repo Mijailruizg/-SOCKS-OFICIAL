@@ -40,7 +40,7 @@ const ProductDetailPage = () => {
   const relatedProducts = [
     {
       id: 6,
-      name: 'SO - DS02 WH',
+      name: 'SO - DS02',
       price: 30.00,
       sale_price: null,
       category: 'hybrid',
@@ -53,7 +53,7 @@ const ProductDetailPage = () => {
     },
     {
       id: 7,
-      name: 'SO - DS08 BK',
+      name: 'SO - DS08',
       price: 30.00,
       sale_price: null,
       category: 'hybrid',
@@ -66,7 +66,7 @@ const ProductDetailPage = () => {
     },
     {
       id: 8,
-      name: 'SO - DS03 WH',
+      name: 'SO - DS03',
       price: 30.00,
       sale_price: null,
       category: 'hybrid',

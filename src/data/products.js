@@ -64,7 +64,7 @@ export const products = [
   // HYBRID COLLECTION
   {
     id: '6',
-    name: 'SO - DS02 WH',
+    name: 'SO - DS02',
     category: 'hybrid',
     description: 'Premium quality socks from PRODUCT collection. Designed for comfort and style.',
     price: 30.00,
@@ -90,7 +90,7 @@ export const products = [
   },
   {
     id: '7',
-    name: 'SO - DS08 BK',
+    name: 'SO - DS08',
     category: 'hybrid',
     description: 'Premium quality socks from PRODUCT collection. Designed for comfort and style.',
     price: 30.00,
@@ -117,7 +117,7 @@ export const products = [
   },
   {
     id: '8',
-    name: 'SO - DS03 WH',
+    name: 'SO - DS03',
     category: 'hybrid',
     description: 'Premium quality socks from PRODUCT collection. Designed for comfort and style.',
     price: 30.00,
@@ -143,7 +143,7 @@ export const products = [
   },
   {
     id: '9',
-    name: 'SO - DS04 BK',
+    name: 'SO - DS04',
     category: 'hybrid',
     description: 'Premium quality socks from PRODUCT collection. Designed for comfort and style.',
     price: 30.00,
