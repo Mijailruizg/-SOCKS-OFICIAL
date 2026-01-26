@@ -64,18 +64,15 @@ export const products = [
   // HYBRID COLLECTION
   {
     id: '6',
-    name: 'SOCKS OFICIAL',
+    name: 'PRODUCT',
     category: 'hybrid',
-    description: 'Premium quality socks from SOCKS OFICIAL collection. Designed for comfort and style.',
+    description: 'Premium quality socks from PRODUCT collection. Designed for comfort and style.',
     price: 30.00,
     sale_price: null,
     rating: 4.8,
     image_url: '/galeria/product/SO - DS02 WH.jpeg',
     images: [
-      '/galeria/product/SO - DS02 WH.jpeg',
-      '/galeria/product/SO - DS04 BK.jpeg',
-      '/galeria/product/SO - DS03 WH.jpeg',
-      '/galeria/product/SO - DS08 BK.jpeg'
+      '/galeria/product/SO - DS02 WH.jpeg'
     ],
     reviews: 256,
     sizes: ['S', 'M', 'L', 'XL'],
@@ -92,13 +89,16 @@ export const products = [
   },
   {
     id: '7',
-    name: 'SOCKS OFICIAL 2',
+    name: 'PRODUCT',
     category: 'hybrid',
-    description: 'Premium quality socks from SOCKS OFICIAL collection. Designed for comfort and style.',
+    description: 'Premium quality socks from PRODUCT collection. Designed for comfort and style.',
     price: 30.00,
     sale_price: null,
     rating: 4.7,
-    image_url: '/galeria/producto 1/2.jpeg',
+    image_url: '/galeria/product/SO - DS04 BK.jpeg',
+    images: [
+      '/galeria/product/SO - DS04 BK.jpeg'
+    ],
     reviews: 198,
     sizes: ['S', 'M', 'L', 'XL'],
     colors: ['White', 'Black'],
@@ -115,13 +115,16 @@ export const products = [
   },
   {
     id: '8',
-    name: 'SOCKS OFICIAL 3',
+    name: 'PRODUCT',
     category: 'hybrid',
-    description: 'Premium quality socks from SOCKS OFICIAL collection. Designed for comfort and style.',
+    description: 'Premium quality socks from PRODUCT collection. Designed for comfort and style.',
     price: 30.00,
     sale_price: null,
     rating: 4.6,
-    image_url: '/galeria/producto 1/3.jpeg',
+    image_url: '/galeria/product/SO - DS03 WH.jpeg',
+    images: [
+      '/galeria/product/SO - DS03 WH.jpeg'
+    ],
     reviews: 142,
     sizes: ['S', 'M', 'L', 'XL'],
     colors: ['White', 'Black'],
@@ -137,13 +140,16 @@ export const products = [
   },
   {
     id: '9',
-    name: 'SOCKS OFICIAL 4',
+    name: 'PRODUCT',
     category: 'hybrid',
-    description: 'Premium quality socks from SOCKS OFICIAL collection. Designed for comfort and style.',
+    description: 'Premium quality socks from PRODUCT collection. Designed for comfort and style.',
     price: 30.00,
     sale_price: null,
     rating: 4.9,
-    image_url: '/galeria/producto 1/4.jpeg',
+    image_url: '/galeria/product/SO - DS08 BK.jpeg',
+    images: [
+      '/galeria/product/SO - DS08 BK.jpeg'
+    ],
     reviews: 187,
     sizes: ['S', 'M', 'L', 'XL'],
     colors: ['White', 'Black'],
