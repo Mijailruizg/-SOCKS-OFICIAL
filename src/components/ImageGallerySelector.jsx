@@ -6,7 +6,7 @@ export default function ImageGallerySelector({ onSelect, currentImageUrl }) {
   const [imageSize, setImageSize] = useState({ width: '100%', height: 'auto' });
   const [galleryImages] = useState([
     'public/galeria/2.jpeg',
-    'public/galeria/4.jpeg',
+    'public/galeria/model.jpeg',
     'public/galeria/5.jpeg',
     'public/galeria/521320355_18072665359996750_586440822232935836_n.jpg',
     'public/galeria/cafe.jpeg',
