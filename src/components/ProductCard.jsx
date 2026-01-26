@@ -4,10 +4,13 @@ import { ShoppingCart, Star, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { useToast } from '@/components/ui/use-toast';
+import { t } from '@/lib/i18n';
 import { formatPrice } from '@/lib/utils';
 
 const ProductCard = ({ product }) => {
+  useLanguage(); // Para forzar re-render cuando cambia el idioma
   const { addToCart } = useCart();
   const { toast } = useToast();
   
