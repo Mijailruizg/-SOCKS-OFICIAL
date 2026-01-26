@@ -18,7 +18,7 @@ const ensureGalleryFile = () => {
         { id: 1, name: 'Producto 1', image: '/galeria/1.jpeg' },
         { id: 2, name: 'Producto 2', image: '/galeria/2.jpeg' },
         { id: 3, name: 'Producto 3', image: '/galeria/3.jpeg' },
-        { id: 4, name: 'Producto 4', image: '/galeria/4.jpeg' }
+        { id: 4, name: 'Producto 4', image: '/galeria/model.jpeg' }
       ],
       updatedAt: new Date().toISOString()
     };

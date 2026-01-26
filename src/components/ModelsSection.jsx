@@ -13,7 +13,7 @@ const ModelsSection = () => {
     },
     { 
       id: '2', 
-      image: '/galeria/4.jpeg',
+      image: '/galeria/model.jpeg',
       name: 'SOCKS OFICIAL 2',
       rating: 4.7,
       reviews: 198,
