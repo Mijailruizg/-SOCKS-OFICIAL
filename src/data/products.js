@@ -64,13 +64,19 @@ export const products = [
   // HYBRID COLLECTION
   {
     id: '6',
-    name: 'SOCKS OFICIAL 1',
+    name: 'SOCKS OFICIAL',
     category: 'hybrid',
     description: 'Premium quality socks from SOCKS OFICIAL collection. Designed for comfort and style.',
     price: 30.00,
     sale_price: null,
     rating: 4.8,
-    image_url: '/galeria/producto 1/1.jpeg',
+    image_url: '/galeria/product/SO - DS02 WH.jpeg',
+    images: [
+      '/galeria/product/SO - DS02 WH.jpeg',
+      '/galeria/product/SO - DS04 BK.jpeg',
+      '/galeria/product/SO - DS03 WH.jpeg',
+      '/galeria/product/SO - DS08 BK.jpeg'
+    ],
     reviews: 256,
     sizes: ['S', 'M', 'L', 'XL'],
     colors: ['White', 'Black'],

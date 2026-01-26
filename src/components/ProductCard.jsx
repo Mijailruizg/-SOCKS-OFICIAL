@@ -92,16 +92,11 @@ const ProductCard = ({ product }) => {
         </button>
 
         {/* Image */}
-        <div className="relative overflow-hidden aspect-[4/5] bg-gray-50 cursor-zoom-in">
+        <div className="relative overflow-hidden aspect-[4/5] bg-gray-50">
           <img
             src={hasMultipleImages ? product.images[currentImageIndex] : product.image_url}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setShowZoom(true);
-            }}
           />
           {/* Zoom Icon - Removed, cursor is now zoom-in */}
         </div>

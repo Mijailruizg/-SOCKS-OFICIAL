@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Star, Minus, Plus, ShoppingCart, Heart, Share2 } from 'lucide-react';
+import { Star, Minus, Plus, ShoppingCart, Heart, Share2, ZoomIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/components/ui/use-toast';
@@ -16,6 +16,8 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState('M');
   const [selectedColor, setSelectedColor] = useState('White');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showZoom, setShowZoom] = useState(false);
   const { addToCart } = useCart();
   const { toast } = useToast();
 
@@ -135,16 +137,43 @@ const ProductDetailPage = () => {
               animate={{ opacity: 1, x: 0 }}
               className="relative"
             >
-              <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl">
+              <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl relative group cursor-zoom-in" onClick={() => setShowZoom(true)}>
                 <img
-                  src={product.image_url}
+                  src={product.images && product.images.length > 0 ? product.images[currentImageIndex] : product.image_url}
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
+                {/* Zoom Icon */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowZoom(true);
+                  }}
+                  className="absolute bottom-4 right-4 p-3 rounded-full bg-black/70 hover:bg-black text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                >
+                  <ZoomIn className="w-6 h-6" />
+                </button>
               </div>
               {hasDiscount && (
                 <div className="absolute top-4 left-4 bg-red-500 text-white text-sm font-bold px-4 py-2 rounded-full">
                   -{discountPercentage}% DE DESCUENTO
+                </div>
+              )}
+              
+              {/* Image Thumbnails */}
+              {product.images && product.images.length > 1 && (
+                <div className="flex gap-2 mt-4">
+                  {product.images.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentImageIndex(idx)}
+                      className={`aspect-square w-16 rounded-lg overflow-hidden border-2 transition-all ${
+                        currentImageIndex === idx ? 'border-black' : 'border-gray-200 hover:border-gray-400'
+                      }`}
+                    >
+                      <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                    </button>
+                  ))}
                 </div>
               )}
             </motion.div>
@@ -333,6 +362,34 @@ const ProductDetailPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Zoom Modal */}
+      {showZoom && (
+        <div
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setShowZoom(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowZoom(false)}
+              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black text-white hover:bg-gray-700"
+            >
+              ✕
+            </button>
+            <img
+              src={product.images && product.images.length > 0 ? product.images[currentImageIndex] : product.image_url}
+              alt={product.name}
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
+        </div>
+      )}
     </>
   );
 };
