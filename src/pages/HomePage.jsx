@@ -20,7 +20,7 @@ const HomePage = () => {
         <ModelsSection />
 
         <ProductSection 
-          title="SOCKS OFICIAL" 
+          title="PRODUCT" 
           category="hybrid"
           className="bg-gray-50"
         />

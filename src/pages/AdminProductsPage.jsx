@@ -53,7 +53,7 @@ export default function AdminProductsPage() {
 
   // Secciones predeterminadas
   const defaultSections = [
-    { id: 'socks-oficial', title: 'SOCKS OFICIAL', category: 'hybrid', description: 'Nuestra colección oficial de calcetines' },
+    { id: 'socks-oficial', title: 'PRODUCT', category: 'hybrid', description: 'Nuestra colección oficial de calcetines' },
     { id: 'new-arrivals', title: 'New Arrivals', category: 'new-arrivals', description: 'Los últimos lanzamientos' },
     { id: 'winter-merino', title: 'Sub 0 Winter Merino', category: 'winter', description: 'Calcetines de lana merino para invierno' },
     { id: 'terry-socks', title: 'TERRY SOCKS ESSENTIALS', category: 'terry-socks', description: 'Calcetines de algodón terrycloth' }
