@@ -317,9 +317,11 @@ const ProductDetailPage = () => {
                   <Share2 className="w-5 h-5" />
                 </Button>
               </div>
+            </motion.div>
+          </div>
 
-              {/* Related Products */}
-              <div>
+          {/* Related Products */}
+          <div>
             <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               You May Also Like
             </h2>
