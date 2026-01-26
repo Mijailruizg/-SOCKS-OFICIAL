@@ -36,7 +36,7 @@ const HomePage = () => {
         />
 
         <ProductSection 
-          title="Sub 0 Winter Merino" 
+          title="SHORT SOCKS" 
           category="winter"
           className="bg-white"
         />

@@ -28,6 +28,7 @@ import MagazinePage from '@/pages/MagazinePage';
 import BlogPostPage from '@/pages/BlogPostPage';
 import AboutPage from '@/pages/AboutPage';
 import ContactPage from '@/pages/ContactPage';
+import ImpactPage from '@/pages/ImpactPage';
 
 // Admin Pages
 import AdminLoginPage from '@/pages/AdminLoginPage';
@@ -127,6 +128,7 @@ function AppRoutes() {
       <Route path="/magazine" element={<MagazinePage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/impact" element={<ImpactPage />} />
       <Route path="/blog/:id" element={<BlogPostPage />} />
       
       {/* Protected Routes */}

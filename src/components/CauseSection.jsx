@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, TrendingUp, Users, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ const IMPACTO_IMAGES = [
 
 const CauseSection = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const [impactoData, setImpactoData] = useState({
@@ -51,10 +53,7 @@ const CauseSection = () => {
   }, []);
 
   const handleLearnMore = () => {
-    toast({
-      title: '🚧 Coming Soon',
-      description: 'Our detailed impact report will be available next month.',
-    });
+    navigate('/impact');
   };
 
   return (
