@@ -5,20 +5,41 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { formatPrice } from '@/lib/utils';
 
+const IMPACTO_IMAGES = [
+  '/galeria/IMPACTO SOCIAL/imagen1.jpeg',
+  '/galeria/IMPACTO SOCIAL/imagen 3.jpeg',
+  '/galeria/IMPACTO SOCIAL/imagen 2.jpeg'
+];
+
 const CauseSection = () => {
   const { toast } = useToast();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const [impactoData, setImpactoData] = useState({
-    heading: 'CORRE POR',
-    subheading: 'EL BIEN',
-    description: 'Creemos que cada paso cuenta. Por eso el 5% de cada compra se destina directamente a programas deportivos juveniles en comunidades necesitadas.',
+    heading: 'Our Commitment',
+    subheading: 'to Athletes',
+    description: 'At SOCKS OFICIAL, our commitment is clear: support athletes who give their best every day. Because when you commit to your sport, we commit to you',
     donated: '50K+',
     donatedLabel: 'PARES DONADOS',
     raised: 'S/ 120,000.00',
     raisedLabel: 'RECAUDADO',
     communities: '20+',
     communitiesLabel: 'COMUNIDADES',
-    image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c'
+    image: '/galeria/IMPACTO SOCIAL/imagen1.jpeg'
   });
+
+  // Cambiar imagen cada 1.5 segundos
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => {
+        const next = (prev + 1) % IMPACTO_IMAGES.length;
+        console.log('Cambiando a imagen', next, ':', IMPACTO_IMAGES[next]);
+        return next;
+      });
+    }, 1500);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const storedData = localStorage.getItem('impacto_data');
@@ -93,13 +114,17 @@ const CauseSection = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl transition-transform duration-500 grayscale">
-                <img
-                src={impactoData.image}
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                <motion.img
+                src={IMPACTO_IMAGES[currentImageIndex]}
                 alt="Community Impact"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
                 className="w-full h-[600px] object-cover"
                 onError={(e) => {
-                  e.target.src = 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c';
+                  console.error('Error loading image:', e.target.src);
+                  e.target.src = IMPACTO_IMAGES[0];
                 }}
                 />
                 <div className="absolute bottom-8 left-8 z-20 max-w-xs">
