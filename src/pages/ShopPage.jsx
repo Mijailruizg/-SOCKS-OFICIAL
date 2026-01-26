@@ -20,7 +20,7 @@ const ShopPage = () => {
   const [showNewArrivals, setShowNewArrivals] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
-  const categories = ['all', 'running', 'hybrid', 'winter', 'golf'];
+  const categories = ['all', 'hybrid', 'terry-socks'];
 
   // Scroll to top when page loads or category changes
   useEffect(() => {
@@ -85,7 +85,7 @@ const ShopPage = () => {
 
       // Excluir categorías que no son productos reales
       filtered = filtered.filter(p => 
-        p.category !== 'new-arrivals' && p.category !== 'customized-socks'
+        p.category !== 'new-arrivals' && p.category !== 'customized-socks' && p.category !== 'winter'
       );
 
       // Category filter
@@ -208,23 +208,6 @@ const ShopPage = () => {
                         <span className="ml-2 text-black lowercase">{cat}</span>
                       </label>
                     ))}
-                  </div>
-                </div>
-
-                {/* Price Range */}
-                <div className="mb-6">
-                  <h4 className="font-medium mb-3 text-black">Price Range</h4>
-                  <Slider
-                    min={0}
-                    max={50}
-                    step={5}
-                    value={priceRange}
-                    onValueChange={setPriceRange}
-                    className="mb-2"
-                  />
-                  <div className="flex justify-between text-sm text-black/70">
-                    <span>{formatPrice(priceRange[0])}</span>
-                    <span>{formatPrice(priceRange[1])}</span>
                   </div>
                 </div>
 

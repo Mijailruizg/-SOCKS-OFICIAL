@@ -7,7 +7,7 @@ import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/components/ui/use-toast';
 import { formatPrice } from '@/lib/utils';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, showPlaceholder = false }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -92,13 +92,21 @@ const ProductCard = ({ product }) => {
         </button>
 
         {/* Image */}
-        <div className="relative overflow-hidden aspect-[4/5] bg-gray-50">
-          <img
-            src={hasMultipleImages ? product.images[currentImageIndex] : product.image_url}
-            alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
-          />
-          {/* Zoom Icon - Removed, cursor is now zoom-in */}
+        <div className="relative overflow-hidden aspect-[4/5] bg-white group">
+          {showPlaceholder ? (
+            <div className="w-full h-full bg-white flex items-center justify-center">
+              <span className="text-gray-400 text-sm font-semibold">Pendiente</span>
+            </div>
+          ) : (
+            <img
+              src={hasMultipleImages ? product.images[currentImageIndex] : product.image_url}
+              alt={product.name}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
+              onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/400x500?text=Imagen';
+              }}
+            />
+          )}
         </div>
 
         {/* Content */}

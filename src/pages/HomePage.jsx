@@ -39,6 +39,7 @@ const HomePage = () => {
           title="SHORT SOCKS" 
           category="winter"
           className="bg-white"
+          emptyPlaceholders={true}
         />
 
         <ProductSection 

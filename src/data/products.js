@@ -155,28 +155,6 @@ export const products = [
     ],
     is_new: false
   },
-  {
-    id: '10',
-    name: 'SOCKS OFICIAL 5',
-    category: 'hybrid',
-    description: 'Premium quality socks from SOCKS OFICIAL collection. Designed for comfort and style.',
-    price: 30.00,
-    sale_price: null,
-    rating: 4.7,
-    image_url: '/galeria/producto 1/5.jpeg',
-    reviews: 213,
-    sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['White', 'Black'],
-    stock: 48,
-    features: [
-      'Premium quality material',
-      'Comfortable fit',
-      'Available in multiple sizes',
-      'Perfect for daily wear',
-      'High durability'
-    ],
-    is_new: false
-  },
 
   // WINTER COLLECTION
   {

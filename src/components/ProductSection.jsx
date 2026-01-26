@@ -5,7 +5,7 @@ import { ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { api } from '@/lib/api';
 
-const ProductSection = ({ title, category, className = "" }) => {
+const ProductSection = ({ title, category, className = "", showPlaceholders = false, emptyPlaceholders = false }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sectionTitle, setSectionTitle] = useState(title);
@@ -61,6 +61,14 @@ const ProductSection = ({ title, category, className = "" }) => {
                     <div key={i} className="h-96 bg-gray-100 rounded-2xl animate-pulse"></div>
                 ))}
             </div>
+        ) : emptyPlaceholders ? (
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1,2,3,4].map(i => (
+              <div key={i} className="h-96 bg-white rounded-2xl flex items-center justify-center border border-gray-200">
+                <p className="text-gray-400 font-semibold">Pendiente</p>
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((product, index) => (
@@ -72,7 +80,7 @@ const ProductSection = ({ title, category, className = "" }) => {
                   transition={{ delay: index * 0.1 }}
                   className="h-full"
                 >
-                  <ProductCard product={product} />
+                  <ProductCard product={product} showPlaceholder={showPlaceholders} />
                 </motion.div>
               ))}
             </div>

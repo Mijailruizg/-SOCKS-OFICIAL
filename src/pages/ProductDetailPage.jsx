@@ -18,25 +18,6 @@ const ProductDetailPage = () => {
   const [selectedColor, setSelectedColor] = useState('White');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showZoom, setShowZoom] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState(1);
-  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
-
-  const handleZoomWheel = (e) => {
-    if (!showZoom) return;
-    e.preventDefault();
-    e.stopPropagation();
-    
-    const delta = e.deltaY > 0 ? -0.2 : 0.2;
-    const newZoom = Math.min(Math.max(zoomLevel + delta, 1), 4);
-    setZoomLevel(newZoom);
-    
-    // Calcular posición del mouse relativa a la imagen
-    const rect = e.currentTarget.getBoundingClientRect();
-    setZoomPosition({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-    });
-  };
   const { addToCart } = useCart();
   const { toast } = useToast();
 
@@ -119,7 +100,7 @@ const ProductDetailPage = () => {
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
       </div>
     );
   }
@@ -140,7 +121,7 @@ const ProductDetailPage = () => {
         <meta name="description" content={product.description} />
       </Helmet>
 
-      <div className="min-h-screen bg-white py-12 px-4">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Breadcrumb */}
           <nav className="mb-8 text-sm text-gray-600">
@@ -327,14 +308,14 @@ const ProductDetailPage = () => {
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center hover:border-black transition-colors"
+                    className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center hover:border-purple-600 transition-colors"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
                   <span className="text-xl font-medium w-12 text-center">{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                    className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center hover:border-black transition-colors"
+                    className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center hover:border-purple-600 transition-colors"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -388,16 +369,15 @@ const ProductDetailPage = () => {
       {/* Zoom Modal */}
       {showZoom && (
         <div
-          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-hidden"
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
           onClick={() => setShowZoom(false)}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden flex items-center justify-center"
+            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
             onClick={(e) => e.stopPropagation()}
-            onWheel={handleZoomWheel}
           >
             <button
               onClick={() => setShowZoom(false)}
@@ -405,20 +385,11 @@ const ProductDetailPage = () => {
             >
               ✕
             </button>
-            <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
-              <img
-                src={product.images && product.images.length > 0 ? product.images[currentImageIndex] : product.image_url}
-                alt={product.name}
-                className="max-w-full max-h-full object-contain transition-transform duration-200"
-                style={{
-                  transform: `scale(${zoomLevel})`,
-                  transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                }}
-              />
-            </div>
-            <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-2 rounded text-sm">
-              Zoom: {Math.round(zoomLevel * 100)}%
-            </div>
+            <img
+              src={product.images && product.images.length > 0 ? product.images[currentImageIndex] : product.image_url}
+              alt={product.name}
+              className="w-full h-full object-contain"
+            />
           </motion.div>
         </div>
       )}

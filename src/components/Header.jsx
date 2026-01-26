@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingCart, Menu, X, User, LogOut, Package, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
-import { api } from '@/lib/api';
-import { formatPrice } from '@/lib/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,64 +17,17 @@ import {
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [showResults, setShowResults] = useState(false);
-  const [focusedSearch, setFocusedSearch] = useState(false);
-  const [allProducts, setAllProducts] = useState([]);
   const { user, signOut } = useAuth();
   const { getCartCount } = useCart();
   const navigate = useNavigate();
-
-  // Cargar productos al montar
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const products = await api.getProducts();
-        setAllProducts(products);
-      } catch (err) {
-        console.error('Error loading products', err);
-      }
-    };
-    loadProducts();
-  }, []);
-
-  // Buscar productos solo cuando está enfocado
-  useEffect(() => {
-    if (!focusedSearch) {
-      setShowResults(false);
-      return;
-    }
-
-    if (searchQuery.trim()) {
-      const results = allProducts.filter(p =>
-        p.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setSearchResults(results);
-      setShowResults(true);
-    } else {
-      // Mostrar productos disponibles si está enfocado pero vacío
-      setSearchResults(allProducts.filter(p => 
-        p.category !== 'new-arrivals' && p.category !== 'customized-socks' && p.category !== 'winter' && p.id !== '10'
-      ).slice(0, 8));
-      setShowResults(true);
-    }
-  }, [searchQuery, allProducts, focusedSearch]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/shop?search=${encodeURIComponent(searchQuery)}`);
       setSearchQuery('');
-      setFocusedSearch(false);
       setMobileMenuOpen(false);
     }
-  };
-
-  const handleProductClick = (productId) => {
-    navigate(`/product/${productId}`);
-    setSearchQuery('');
-    setShowResults(false);
-    setFocusedSearch(false);
   };
 
   const handleLogout = async () => {
@@ -130,51 +81,17 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
-            {/* Search with Smart Results (Desktop) */}
-            <div className="hidden lg:block relative">
-              <form onSubmit={handleSearch}>
-                <input
-                 type="text"
-                 placeholder="Search..."
-                 value={searchQuery}
-                 onChange={(e) => setSearchQuery(e.target.value)}
-                 onFocus={() => setFocusedSearch(true)}
-                 onBlur={() => setTimeout(() => setFocusedSearch(false), 200)}
-                 className="pl-3 pr-8 py-1 rounded-full border border-gray-700 bg-black text-white text-sm focus:outline-none focus:border-white w-40 transition-all focus:w-60 placeholder-gray-500"
-                />
-                <Search className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-              </form>
-
-              {/* Search Results Dropdown */}
-              {showResults && searchResults.length > 0 && (
-                <div className="absolute top-full right-0 mt-2 w-80 bg-black border border-gray-700 rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
-                  {searchResults.map((product) => (
-                    <button
-                      key={product.id}
-                      onClick={() => handleProductClick(product.id)}
-                      className="w-full flex items-center gap-3 p-3 hover:bg-gray-900 border-b border-gray-800 last:border-0 text-left"
-                    >
-                      <img
-                        src={product.image_url}
-                        alt={product.name}
-                        className="w-12 h-12 rounded object-cover"
-                        onError={(e) => {
-                          e.target.src = 'https://via.placeholder.com/50?text=Product';
-                        }}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-white line-clamp-1">
-                          {product.name}
-                        </p>
-                        <p className="text-xs text-gray-400">
-                          {formatPrice(product.sale_price || product.price)}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Search Trigger (Desktop) */}
+            <form onSubmit={handleSearch} className="hidden lg:block relative">
+              <input
+               type="text"
+               placeholder="Search..."
+               value={searchQuery}
+               onChange={(e) => setSearchQuery(e.target.value)}
+               className="pl-3 pr-8 py-1 rounded-full border border-gray-700 bg-black text-white text-sm focus:outline-none focus:border-white w-40 transition-all focus:w-60 placeholder-gray-500"
+              />
+              <Search className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            </form>
 
             {/* User Menu */}
             {user ? (
