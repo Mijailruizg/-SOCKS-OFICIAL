@@ -85,7 +85,7 @@ const ShopPage = () => {
 
       // Excluir categorías que no son productos reales
       filtered = filtered.filter(p => 
-        p.category !== 'new-arrivals' && p.category !== 'customized-socks' && p.category !== 'winter'
+        p.category !== 'new-arrivals' && p.category !== 'customized-socks' && p.category !== 'winter' && p.id !== '10'
       );
 
       // Category filter
