@@ -14,42 +14,42 @@ const ImpactPage = () => {
       id: 1,
       name: 'Kraken',
       comment: 'Excelentes, cómodos y comprimen bien la piel para evitar resistencia al viento, me gusta el material y la longitud.',
-      image: 'public/galeria/comentarios/comentario1.jpeg',
+      image: '/galeria/comentarios/comentario1.jpeg',
       delay: 0
     },
     {
       id: 2,
       name: 'Jean Carlos',
       comment: 'Las medias han sido de mi agrado. La primera vez que las probé se sienten cómodas al tacto. Las recomiendo.',
-      image: 'public/galeria/comentarios/comentario2.jpeg',
+      image: '/galeria/comentarios/comentario2.jpeg',
       delay: 0.1
     },
     {
       id: 3,
       name: 'Lisbeth Barnett',
       comment: 'Con los calcetines de SOCKS OFICIAL para ciclismo he sentido el ajuste perfecto, alta transpirabilidad y gran comodidad incluso en rutas largas, ayudan mucho que no haya fricción considerando que las zapatillas de ciclismo son rígidas y también ofrecen un diseño personalizado para ciclistas que buscan rendimiento y estilo en cada pedaleo.',
-      image: 'public/galeria/comentarios/comentario3.jpeg',
+      image: '/galeria/comentarios/comentario3.jpeg',
       delay: 0.2
     },
     {
       id: 4,
       name: 'Ricardo Vidal (Aquiles)',
       comment: 'Excelentes medias de ciclismo. Muy cómodas, con buena ventilación y además se puede personalizar los diseños para que combine con tu outfit de ciclismo.\nSe nota que están hechas por y para ciclistas. Socks Oficial ya es mi marca de confianza para los pies y varios grupos de ciclismo las están usando. Y tú qué esperas para usar socks oficial?',
-      image: 'public/galeria/comentarios/comentario4.jpeg',
+      image: '/galeria/comentarios/comentario4.jpeg',
       delay: 0.3
     },
     {
       id: 5,
       name: 'Leonardo',
       comment: 'Las medias de Socks Oficial, dan mucho confort, buen diseño, frescas y ligeras. Las llevo en todas mis rutas.',
-      image: 'public/galeria/comentarios/comentario5.jpeg',
+      image: '/galeria/comentarios/comentario5.jpeg',
       delay: 0.4
     },
     {
       id: 6,
       name: 'Rocio Denisse',
       comment: 'Tienen un excelente material son muy buenas para rutas largas o cuando vas a rutas que hacen demasiado frio las medias te ayudan a comprimir excelente calidad.',
-      image: 'public/galeria/comentarios/comentario6.jpeg',
+      image: '/galeria/comentarios/comentario6.jpeg',
       delay: 0.5
     }    
   ];
