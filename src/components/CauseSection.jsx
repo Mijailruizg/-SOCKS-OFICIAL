@@ -68,7 +68,7 @@ const CauseSection = () => {
             viewport={{ once: true }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black text-white text-xs font-bold mb-6">
-                <Heart className="w-3 h-3" /> ALLIANCE
+                <Heart className="w-3 h-3" /> IMPACTO SOCIAL
             </div>
             
             <h2 className="text-4xl md:text-6xl font-black mb-6 leading-none text-black">
@@ -126,7 +126,7 @@ const CauseSection = () => {
                 }}
                 />
                 <div className="absolute bottom-8 left-8 z-20 max-w-xs">
-                    <p className="text-white font-bold text-lg italic drop-shadow-md">"Sport has the power to change the world."</p>
+                    <p className="text-white font-bold text-lg italic drop-shadow-md">XPLOSIVE CLUB PERÚ</p>
                 </div>
             </div>
           </motion.div>
