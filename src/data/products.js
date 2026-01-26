@@ -148,11 +148,11 @@ export const products = [
     description: 'Premium quality socks from PRODUCT collection. Designed for comfort and style.',
     price: 30.00,
     sale_price: null,
-    rating: 4.9,4 BK.jpeg',
+    rating: 4.9,
+    image_url: '/galeria/product/SO - DS04 BK.jpeg',
     images: [
       '/galeria/product/SO - DS04 BK.jpeg',
-      '/galeria/product/6
-      '/galeria/product/SO - DS08 BK.jpeg'
+      '/galeria/product/6.jpeg'
     ],
     reviews: 187,
     sizes: ['S', 'M', 'L', 'XL'],
