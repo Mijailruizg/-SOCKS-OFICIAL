@@ -29,7 +29,7 @@ const HomePage = () => {
 
         {/* New Arrivals movido más abajo */}
         <ProductSection 
-          title="New Arrivals" 
+          title="CUSTOMIZED SOCKS" 
           category="new-arrivals"
           className="bg-white"
         />
