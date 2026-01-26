@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 const ImpactPage = () => {
+  const [expandedTestimonial, setExpandedTestimonial] = useState(null);
+  const CHAR_LIMIT = 122;
+
   // Scroll al tope cuando se monta la página
   React.useEffect(() => {
     window.scrollTo(0, 0);
@@ -136,19 +139,35 @@ const ImpactPage = () => {
               </div>
 
               {/* Nube de mensaje abajo */}
-              <div className="bg-white rounded-3xl shadow-lg p-6 relative w-full border-2 border-black hover:shadow-2xl transition-all duration-300">
+              <div className="bg-white rounded-3xl shadow-lg p-6 relative w-full border-2 border-black hover:shadow-2xl transition-all duration-300 min-h-[220px] flex flex-col justify-between">
                 {/* Cola de la nube */}
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-white border-2 border-black rounded-full"></div>
                 
                 {/* Contenido */}
-                <div className="text-center mt-2">
+                <div className="text-center mt-2 flex-1 flex flex-col justify-center">
                   <h3 className="font-black text-lg text-black mb-2">
                     {testimonial.name}
                   </h3>
                   <p className="text-gray-700 italic leading-relaxed text-sm md:text-base">
-                    "{testimonial.comment}"
+                    "{expandedTestimonial === testimonial.id 
+                      ? testimonial.comment 
+                      : testimonial.comment.length > CHAR_LIMIT 
+                        ? testimonial.comment.substring(0, CHAR_LIMIT) + '...' 
+                        : testimonial.comment}"
                   </p>
                 </div>
+
+                {/* Botón Ver Más/Ver Menos */}
+                {testimonial.comment.length > CHAR_LIMIT && (
+                  <button
+                    onClick={() => setExpandedTestimonial(
+                      expandedTestimonial === testimonial.id ? null : testimonial.id
+                    )}
+                    className="mt-4 px-4 py-2 bg-black text-white rounded-full text-sm font-bold hover:bg-gray-800 transition-colors duration-200 self-center"
+                  >
+                    {expandedTestimonial === testimonial.id ? 'Ver menos' : 'Ver más'}
+                  </button>
+                )}
               </div>
             </motion.div>
           ))}
