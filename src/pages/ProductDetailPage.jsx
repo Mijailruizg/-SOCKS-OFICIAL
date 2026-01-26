@@ -318,23 +318,8 @@ const ProductDetailPage = () => {
                 </Button>
               </div>
 
-              {/* Features */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-                <h3 className="font-bold text-lg mb-4">Características principales</h3>
-                <ul className="space-y-2">
-                  {product.features?.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-2 text-gray-700">
-                      <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-600"></div>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Related Products */}
-          <div>
+              {/* Related Products */}
+              <div>
             <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               You May Also Like
             </h2>
