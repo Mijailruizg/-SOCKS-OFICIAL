@@ -140,13 +140,13 @@ const ProductDetailPage = () => {
         <meta name="description" content={product.description} />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-purple-50 py-12 px-4">
+      <div className="min-h-screen bg-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Breadcrumb */}
           <nav className="mb-8 text-sm text-gray-600">
-            <Link to="/" className="hover:text-purple-600">Home</Link>
+            <Link to="/" className="hover:text-black">Home</Link>
             <span className="mx-2">/</span>
-            <Link to="/shop" className="hover:text-purple-600">Shop</Link>
+            <Link to="/shop" className="hover:text-black">Shop</Link>
             <span className="mx-2">/</span>
             <span className="text-gray-900">{product.name}</span>
           </nav>
@@ -206,7 +206,7 @@ const ProductDetailPage = () => {
               animate={{ opacity: 1, x: 0 }}
             >
               {product.is_new && (
-                <span className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-bold px-4 py-1 rounded-full mb-4">
+                <span className="inline-block bg-black text-white text-sm font-bold px-4 py-1 rounded-full mb-4">
                   NEW
                 </span>
               )}
@@ -236,7 +236,7 @@ const ProductDetailPage = () => {
 
               {/* Price */}
               <div className="flex items-center gap-4 mb-6">
-                <span className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="text-4xl font-bold text-black">
                   {formatPrice(product.sale_price || product.price)}
                 </span>
                 {hasDiscount && (
@@ -261,8 +261,8 @@ const ProductDetailPage = () => {
                         onClick={() => setSelectedColor(color)}
                         className={`px-6 py-2 rounded-xl font-medium transition-all ${
                           selectedColor === color
-                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-600'
+                            ? 'bg-black text-white shadow-lg'
+                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-black'
                         }`}
                       >
                         {color}
@@ -273,8 +273,8 @@ const ProductDetailPage = () => {
                       onClick={() => setSelectedColor('White')}
                       className={`px-6 py-2 rounded-xl font-medium transition-all ${
                         selectedColor === 'White'
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                          : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-600'
+                          ? 'bg-black text-white shadow-lg'
+                          : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-black'
                       }`}
                     >
                       White
@@ -294,8 +294,8 @@ const ProductDetailPage = () => {
                         onClick={() => setSelectedSize(size)}
                         className={`w-12 h-12 rounded-xl font-medium transition-all ${
                           selectedSize === size
-                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-600'
+                            ? 'bg-black text-white shadow-lg'
+                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-black'
                         }`}
                       >
                         {size}
@@ -309,8 +309,8 @@ const ProductDetailPage = () => {
                           onClick={() => setSelectedSize(size)}
                           className={`w-12 h-12 rounded-xl font-medium transition-all ${
                             selectedSize === size
-                              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                              : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-600'
+                              ? 'bg-black text-white shadow-lg'
+                              : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-black'
                           }`}
                         >
                           {size}
@@ -327,14 +327,14 @@ const ProductDetailPage = () => {
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center hover:border-purple-600 transition-colors"
+                    className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center hover:border-black transition-colors"
                   >
                     <Minus className="w-4 h-4" />
                   </button>
                   <span className="text-xl font-medium w-12 text-center">{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                    className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center hover:border-purple-600 transition-colors"
+                    className="w-10 h-10 rounded-xl bg-white border-2 border-gray-200 flex items-center justify-center hover:border-black transition-colors"
                   >
                     <Plus className="w-4 h-4" />
                   </button>
@@ -348,7 +348,7 @@ const ProductDetailPage = () => {
               <div className="flex gap-4 mb-8">
                 <Button
                   onClick={handleAddToCart}
-                  className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-6 rounded-xl shadow-lg hover:shadow-purple-500/50 transform hover:scale-105 transition-all"
+                  className="flex-1 bg-black hover:bg-gray-800 text-white py-6 rounded-xl shadow-lg hover:shadow-black/50 transform hover:scale-105 transition-all"
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   Add to Cart
@@ -373,7 +373,7 @@ const ProductDetailPage = () => {
 
           {/* Related Products */}
           <div>
-            <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold mb-8 text-black">
               You May Also Like
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
