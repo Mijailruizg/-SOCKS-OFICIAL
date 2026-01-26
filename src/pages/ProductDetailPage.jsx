@@ -18,6 +18,25 @@ const ProductDetailPage = () => {
   const [selectedColor, setSelectedColor] = useState('White');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showZoom, setShowZoom] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+
+  const handleZoomWheel = (e) => {
+    if (!showZoom) return;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const delta = e.deltaY > 0 ? -0.2 : 0.2;
+    const newZoom = Math.min(Math.max(zoomLevel + delta, 1), 4);
+    setZoomLevel(newZoom);
+    
+    // Calcular posición del mouse relativa a la imagen
+    const rect = e.currentTarget.getBoundingClientRect();
+    setZoomPosition({
+      x: ((e.clientX - rect.left) / rect.width) * 100,
+      y: ((e.clientY - rect.top) / rect.height) * 100,
+    });
+  };
   const { addToCart } = useCart();
   const { toast } = useToast();
 
@@ -369,15 +388,16 @@ const ProductDetailPage = () => {
       {/* Zoom Modal */}
       {showZoom && (
         <div
-          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-hidden"
           onClick={() => setShowZoom(false)}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
+            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
+            onWheel={handleZoomWheel}
           >
             <button
               onClick={() => setShowZoom(false)}
@@ -385,11 +405,20 @@ const ProductDetailPage = () => {
             >
               ✕
             </button>
-            <img
-              src={product.images && product.images.length > 0 ? product.images[currentImageIndex] : product.image_url}
-              alt={product.name}
-              className="w-full h-full object-contain"
-            />
+            <div className="relative w-full h-full overflow-hidden flex items-center justify-center">
+              <img
+                src={product.images && product.images.length > 0 ? product.images[currentImageIndex] : product.image_url}
+                alt={product.name}
+                className="max-w-full max-h-full object-contain transition-transform duration-200"
+                style={{
+                  transform: `scale(${zoomLevel})`,
+                  transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                }}
+              />
+            </div>
+            <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-2 rounded text-sm">
+              Zoom: {Math.round(zoomLevel * 100)}%
+            </div>
           </motion.div>
         </div>
       )}
