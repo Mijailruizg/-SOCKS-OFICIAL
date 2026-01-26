@@ -223,8 +223,8 @@ export const products = [
     rating: 4.8,
     image_url: '/galeria/TERRY SOCKS ESSENTIALS/uno.jpeg',
     reviews: 112,
-    colors: ['AZUL MARINO', 'GRIS', 'NEGRO'],
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: ['AZUL', 'GRIS', 'NEGRO'],
+    sizes: ['S', 'M', 'L', 'XL'],
     is_new: false
   },
   {
@@ -237,8 +237,8 @@ export const products = [
     rating: 4.9,
     image_url: '/galeria/TERRY SOCKS ESSENTIALS/dos.jpeg',
     reviews: 67,
-    colors: ['AZUL MARINO', 'GRIS', 'NEGRO'],
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: ['AZUL', 'GRIS', 'NEGRO'],
+    sizes: ['S', 'M', 'L', 'XL'],
     is_new: false
   },
   {
@@ -251,8 +251,8 @@ export const products = [
     rating: 5.0,
     image_url: '/galeria/TERRY SOCKS ESSENTIALS/tres.jpeg',
     reviews: 34,
-    colors: ['AZUL MARINO', 'GRIS', 'NEGRO'],
-    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    colors: ['AZUL', 'GRIS', 'NEGRO'],
+    sizes: ['S', 'M', 'L', 'XL'],
     is_new: false
   }
 ];
