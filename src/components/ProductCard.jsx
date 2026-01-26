@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Star, Heart, ZoomIn } from 'lucide-react';
+import { ShoppingCart, Star, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
@@ -92,23 +92,18 @@ const ProductCard = ({ product }) => {
         </button>
 
         {/* Image */}
-        <div className="relative overflow-hidden aspect-[4/5] bg-gray-50">
+        <div className="relative overflow-hidden aspect-[4/5] bg-gray-50 cursor-zoom-in">
           <img
             src={hasMultipleImages ? product.images[currentImageIndex] : product.image_url}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
-          />
-          {/* Zoom Icon */}
-          <button
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               setShowZoom(true);
             }}
-            className="absolute bottom-3 right-3 p-2 rounded-full bg-black/70 hover:bg-black text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
-          >
-            <ZoomIn className="w-5 h-5" />
-          </button>
+          />
+          {/* Zoom Icon - Removed, cursor is now zoom-in */}
         </div>
 
         {/* Content */}
