@@ -126,7 +126,7 @@ const CauseSection = () => {
                 }}
                 />
                 <div className="absolute bottom-8 left-8 z-20 max-w-xs">
-                    <p className="text-white font-bold text-lg italic drop-shadow-md">XPLOSIVE CLUB PERÚ</p>
+                    <p className="text-white font-bold text-base italic drop-shadow-md" style={{ fontSize: '16px' }}>XPLOSIVE CLUB PERÚ</p>
                 </div>
             </div>
           </motion.div>
