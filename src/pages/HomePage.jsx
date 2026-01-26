@@ -4,6 +4,8 @@ import HeroSection from '@/components/HeroSection';
 import ProductSection from '@/components/ProductSection';
 import CauseSection from '@/components/CauseSection';
 import ModelsSection from '@/components/ModelsSection';
+import CustomizedModelsSection from '@/components/CustomizedModelsSection';
+import { products } from '@/data/products';
 
 const HomePage = () => {
   return (
@@ -27,11 +29,10 @@ const HomePage = () => {
 
         <CauseSection />
 
-        {/* New Arrivals movido más abajo */}
-        <ProductSection 
+        {/* Customized Models Section */}
+        <CustomizedModelsSection 
           title="CUSTOMIZED SOCKS" 
-          category="new-arrivals"
-          className="bg-white"
+          models={products.filter(p => p.category === 'new-arrivals')}
         />
 
         <ProductSection 
