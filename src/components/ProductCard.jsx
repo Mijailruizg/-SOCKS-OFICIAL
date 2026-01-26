@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ShoppingCart, Star, Heart } from 'lucide-react';
+import { ShoppingCart, Star, Heart, ZoomIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
@@ -12,6 +12,7 @@ const ProductCard = ({ product }) => {
   const { toast } = useToast();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  const [showZoom, setShowZoom] = useState(false);
   
   const hasDiscount = product.sale_price && product.sale_price < product.price;
   const hasMultipleImages = product.images && product.images.length > 1;
@@ -97,6 +98,17 @@ const ProductCard = ({ product }) => {
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
           />
+          {/* Zoom Icon */}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowZoom(true);
+            }}
+            className="absolute bottom-3 right-3 p-2 rounded-full bg-black/70 hover:bg-black text-white opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+          >
+            <ZoomIn className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Content */}
@@ -136,6 +148,34 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
       </motion.div>
+
+      {/* Zoom Modal */}
+      {showZoom && (
+        <div
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setShowZoom(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowZoom(false)}
+              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black text-white hover:bg-gray-700"
+            >
+              ✕
+            </button>
+            <img
+              src={hasMultipleImages ? product.images[currentImageIndex] : product.image_url}
+              alt={product.name}
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
+        </div>
+      )}
     </Link>
   );
 };

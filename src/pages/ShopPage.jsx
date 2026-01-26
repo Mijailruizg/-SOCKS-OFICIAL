@@ -22,6 +22,14 @@ const ShopPage = () => {
 
   const categories = ['all', 'running', 'hybrid', 'winter', 'golf'];
 
+  // Scroll to top when page loads or category changes
+  useEffect(() => {
+    // Use requestAnimationFrame to ensure DOM is ready
+    requestAnimationFrame(() => {
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+    });
+  }, [searchParams.get('category')]);
+
   // Load products from API once on mount
   useEffect(() => {
     let mounted = true;

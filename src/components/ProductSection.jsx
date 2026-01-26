@@ -47,6 +47,7 @@ const ProductSection = ({ title, category, className = "" }) => {
           </div>
           <Link
             to={`/shop?category=${category}`}
+            onClick={() => window.scrollTo(0, 0)}
             className="group flex items-center gap-1 text-sm font-bold text-black hover:underline transition-all"
           >
             VIEW ALL
