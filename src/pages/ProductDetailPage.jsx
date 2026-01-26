@@ -201,41 +201,72 @@ const ProductDetailPage = () => {
 
               {/* Color Selector */}
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-900 mb-3">Color</h3>
-                <div className="flex gap-3">
-                  {['White', 'Black'].map((color) => (
+                <h3 className="text-sm font-medium text-gray-900 mb-3">COLORES DISPONIBLES</h3>
+                <div className="flex gap-3 flex-wrap">
+                  {product.colors && product.colors.length > 0 ? (
+                    product.colors.map((color) => (
+                      <button
+                        key={color}
+                        onClick={() => setSelectedColor(color)}
+                        className={`px-6 py-2 rounded-xl font-medium transition-all ${
+                          selectedColor === color
+                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-600'
+                        }`}
+                      >
+                        {color}
+                      </button>
+                    ))
+                  ) : (
                     <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
+                      onClick={() => setSelectedColor('White')}
                       className={`px-6 py-2 rounded-xl font-medium transition-all ${
-                        selectedColor === color
+                        selectedColor === 'White'
                           ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
                           : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-600'
                       }`}
                     >
-                      {color}
+                      White
                     </button>
-                  ))}
+                  )}
                 </div>
               </div>
 
               {/* Size Selector */}
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-900 mb-3">Size</h3>
-                <div className="flex gap-3">
-                  {['S', 'M', 'L', 'XL'].map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`w-12 h-12 rounded-xl font-medium transition-all ${
-                        selectedSize === size
-                          ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                          : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-600'
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
+                <h3 className="text-sm font-medium text-gray-900 mb-3">TALLAS DISPONIBLES</h3>
+                <div className="flex gap-3 flex-wrap">
+                  {product.sizes && product.sizes.length > 0 ? (
+                    product.sizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`w-12 h-12 rounded-xl font-medium transition-all ${
+                          selectedSize === size
+                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                            : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-600'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))
+                  ) : (
+                    <>
+                      {['S', 'M', 'L', 'XL'].map((size) => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSize(size)}
+                          className={`w-12 h-12 rounded-xl font-medium transition-all ${
+                            selectedSize === size
+                              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
+                              : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-purple-600'
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
 
