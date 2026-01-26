@@ -41,8 +41,8 @@ const HomePage = () => {
         />
 
         <ProductSection 
-          title="Pro Golf Socks" 
-          category="golf"
+          title="TERRY SOCKS ESSENTIALS" 
+          category="terry-socks"
           className="bg-gray-50"
         />
 

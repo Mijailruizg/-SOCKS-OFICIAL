@@ -56,7 +56,7 @@ export default function AdminProductsPage() {
     { id: 'socks-oficial', title: 'SOCKS OFICIAL', category: 'hybrid', description: 'Nuestra colección oficial de calcetines' },
     { id: 'new-arrivals', title: 'New Arrivals', category: 'new-arrivals', description: 'Los últimos lanzamientos' },
     { id: 'winter-merino', title: 'Sub 0 Winter Merino', category: 'winter', description: 'Calcetines de lana merino para invierno' },
-    { id: 'pro-golf', title: 'Pro Golf Socks', category: 'golf', description: 'Calcetines especializados para golf' }
+    { id: 'terry-socks', title: 'TERRY SOCKS ESSENTIALS', category: 'terry-socks', description: 'Calcetines de algodón terrycloth' }
   ];
 
   useEffect(() => {
@@ -471,7 +471,7 @@ export default function AdminProductsPage() {
                   <option value="hybrid">SOCKS OFICIAL</option>
                   <option value="new-arrivals">New Arrivals</option>
                   <option value="winter">Sub 0 Winter Merino</option>
-                  <option value="golf">Pro Golf Socks</option>
+                  <option value="terry-socks">TERRY SOCKS ESSENTIALS</option>
                 </select>
               </div>
 

@@ -288,7 +288,7 @@ export const api = {
       { id: 'socks-oficial', title: 'SOCKS OFICIAL', category: 'hybrid', description: 'Nuestra colección oficial de calcetines' },
       { id: 'new-arrivals', title: 'New Arrivals', category: 'new-arrivals', description: 'Los últimos lanzamientos' },
       { id: 'winter-merino', title: 'Sub 0 Winter Merino', category: 'winter', description: 'Calcetines de lana merino para invierno' },
-      { id: 'pro-golf', title: 'Pro Golf Socks', category: 'golf', description: 'Calcetines especializados para golf' }
+      { id: 'terry-socks', title: 'TERRY SOCKS ESSENTIALS', category: 'terry-socks', description: 'Calcetines de algodón terrycloth' }
     ];
     
     const sections = JSON.parse(localStorage.getItem('content_sections') || '[]');

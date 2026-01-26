@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ShoppingCart, Menu, X, User, LogOut, Package, Heart, Globe } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, User, LogOut, Package, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { t } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -21,7 +19,6 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const { user, signOut } = useAuth();
   const { getCartCount } = useCart();
-  const { locale, setLanguage } = useLanguage();
   const navigate = useNavigate();
 
   const handleSearch = (e) => {
@@ -85,31 +82,6 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-4">
-            {/* Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-white hover:bg-gray-800 hover:text-white">
-                  <Globe className="w-5 h-5" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-black border-gray-800">
-                <DropdownMenuLabel className="text-white">{t('header.language')}</DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-gray-800" />
-                <DropdownMenuItem 
-                  onClick={() => setLanguage('es')}
-                  className={`focus:bg-gray-800 ${locale === 'es' ? 'bg-gray-800 text-white' : 'text-white'}`}
-                >
-                  🇪🇸 Español
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => setLanguage('en')}
-                  className={`focus:bg-gray-800 ${locale === 'en' ? 'bg-gray-800 text-white' : 'text-white'}`}
-                >
-                  🇬🇧 English
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
             {/* Search Trigger (Desktop) */}
             <form onSubmit={handleSearch} className="hidden lg:block relative">
               <input
@@ -202,25 +174,6 @@ const Header = () => {
                   </Link>
                 ))}
               </nav>
-
-              {/* Language Selector Mobile */}
-              <div className="pt-6 border-t border-gray-800">
-                <p className="text-sm font-medium text-gray-400 mb-3">{t('header.language')}</p>
-                <div className="flex gap-2">
-                  <Button 
-                    onClick={() => {setLanguage('es'); setMobileMenuOpen(false);}}
-                    className={`flex-1 ${locale === 'es' ? 'bg-white text-black' : 'bg-gray-800 text-white hover:bg-gray-700'}`}
-                  >
-                    🇪🇸 Español
-                  </Button>
-                  <Button 
-                    onClick={() => {setLanguage('en'); setMobileMenuOpen(false);}}
-                    className={`flex-1 ${locale === 'en' ? 'bg-white text-black' : 'bg-gray-800 text-white hover:bg-gray-700'}`}
-                  >
-                    🇬🇧 English
-                  </Button>
-                </div>
-              </div>
 
               <div className="pt-6 border-t border-gray-800">
                 {user ? (

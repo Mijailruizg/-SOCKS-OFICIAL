@@ -2,11 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useLanguage } from '@/contexts/LanguageContext';
-import { t } from '@/lib/i18n';
 
 const HeroSection = () => {
-  useLanguage(); // Para forzar re-render cuando cambia el idioma
+  // Usar la imagen específica en public/galeria
   const bgImage = '/galeria/521320355_18072665359996750_586440822232935836_n.jpg';
 
   return (
@@ -41,7 +39,10 @@ const HeroSection = () => {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-5xl md:text-7xl font-black text-white mb-6 leading-tight tracking-tight drop-shadow-xl"
           >
-            {t('hero.welcome')}
+            ELEVATE <br />
+            <span className="text-white/80">
+              YOUR STRIDE
+            </span>
           </motion.h1>
 
           <motion.p
@@ -50,7 +51,8 @@ const HeroSection = () => {
             transition={{ delay: 0.5 }}
             className="text-lg md:text-xl text-gray-300 mb-8 max-w-lg leading-relaxed font-light"
           >
-            {t('hero.subtitle')}
+            Engineered for peak performance. Designed for ultimate comfort. 
+            Discover the socks that change the game.
           </motion.p>
 
           <motion.div
@@ -75,7 +77,7 @@ const HeroSection = () => {
                 size="lg"
                 className="w-full sm:w-auto bg-white text-black hover:bg-gray-200 font-bold px-8 py-6 rounded-full text-lg transition-all hover:scale-105"
               >
-                {t('hero.cta')}
+                SHOP NOW
               </Button>
             </Link>
           </motion.div>

@@ -212,41 +212,47 @@ export const products = [
     is_new: false
   },
 
-  // GOLF COLLECTION
+  // TERRY SOCKS ESSENTIALS COLLECTION
   {
     id: '13',
-    name: 'HOLE IN ONE',
-    category: 'golf',
-    description: 'Professional grade golf socks for 18 holes of comfort.',
-    price: 28.00,
-    sale_price: 22.00,
+    name: 'TERRY SOCKS ESSENTIALS BLUE',
+    category: 'terry-socks',
+    description: 'Calcetines de algodón terrycloth con colores disponibles: AZUL MARINO, GRIS, NEGRO. Tallas: XS, S, M, L, XL',
+    price: 30.00,
+    sale_price: null,
     rating: 4.8,
-    image_url: 'https://images.unsplash.com/photo-1587906443886-5f607ca9640c',
+    image_url: '/galeria/TERRY SOCKS ESSENTIALS/uno.jpeg',
     reviews: 112,
+    colors: ['AZUL MARINO', 'GRIS', 'NEGRO'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
     is_new: false
   },
   {
     id: '14',
-    name: 'FAIRWAY PRO',
-    category: 'golf',
-    description: 'Stabilizing arch support for the perfect swing base.',
+    name: 'TERRY SOCKS ESSENTIALS GRAY',
+    category: 'terry-socks',
+    description: 'Calcetines de algodón terrycloth con colores disponibles: AZUL MARINO, GRIS, NEGRO. Tallas: XS, S, M, L, XL',
     price: 30.00,
     sale_price: null,
     rating: 4.9,
-    image_url: 'https://images.unsplash.com/photo-1694690890379-12bb810645ff',
+    image_url: '/galeria/TERRY SOCKS ESSENTIALS/dos.jpeg',
     reviews: 67,
+    colors: ['AZUL MARINO', 'GRIS', 'NEGRO'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
     is_new: false
   },
   {
     id: '15',
-    name: 'EAGLE ELITE',
-    category: 'golf',
-    description: 'Luxury cotton blend for the clubhouse and the course.',
-    price: 32.00,
-    sale_price: 26.00,
+    name: 'TERRY SOCKS ESSENTIALS BLACK',
+    category: 'terry-socks',
+    description: 'Calcetines de algodón terrycloth con colores disponibles: AZUL MARINO, GRIS, NEGRO. Tallas: XS, S, M, L, XL',
+    price: 30.00,
+    sale_price: null,
     rating: 5.0,
-    image_url: 'https://images.unsplash.com/photo-1591534338072-e9e0eff05006',
+    image_url: '/galeria/TERRY SOCKS ESSENTIALS/tres.jpeg',
     reviews: 34,
+    colors: ['AZUL MARINO', 'GRIS', 'NEGRO'],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
     is_new: false
   }
 ];

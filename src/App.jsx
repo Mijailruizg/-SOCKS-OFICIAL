@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AdminAuthProvider } from '@/contexts/AdminAuthContext';
 import { CartProvider } from '@/contexts/CartContext';
-import { LanguageProvider } from '@/contexts/LanguageContext';
 import { Toaster } from '@/components/ui/toaster';
 
 // Components
@@ -153,17 +152,15 @@ function AppRoutes() {
 function App() {
   return (
     <Router basename={import.meta.env.BASE_URL}>
-      <LanguageProvider>
-        <AuthProvider>
-          <AdminAuthProvider>
-            <CartProvider>
-              <LayoutWrapper>
-                <AppRoutes />
-              </LayoutWrapper>
-            </CartProvider>
-          </AdminAuthProvider>
-        </AuthProvider>
-      </LanguageProvider>
+      <AuthProvider>
+        <AdminAuthProvider>
+          <CartProvider>
+            <LayoutWrapper>
+              <AppRoutes />
+            </LayoutWrapper>
+          </CartProvider>
+        </AdminAuthProvider>
+      </AuthProvider>
     </Router>
   );
 }
